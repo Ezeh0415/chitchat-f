@@ -163,17 +163,28 @@ const Dashboard = () => {
                     )}
 
                     <div className="flex  items-center gap-2">
-                      <Link
-                        to={
-                          posts.email === user.email
-                            ? "/profile"
-                            : "/UserProfile"
-                        }
-                        className="flex items-center gap-1 capitalize border-r px-1"
-                      >
-                        <h2 className="text-xs"> {posts.firstName} </h2>
-                        <h2 className="text-xs"> {posts.lastName} </h2>
-                      </Link>
+                      {posts.email === user.email ? (
+                        <Link
+                          to={`/profile`}
+                          className="flex items-center gap-1 capitalize border-r px-1 "
+                        >
+                          <h2 className="text-xs"> {posts.firstName} </h2>
+                          <h2 className="text-xs"> {posts.lastName} </h2>
+                        </Link>
+                      ) : (
+                        <button
+                          onClick={() => {
+                            handleGetUsersProfile(posterEmail);
+                            setTimeout(() => {
+                              navigate("/UserProfile");
+                            }, 1500);
+                          }}
+                          className="flex items-center gap-1 capitalize border-r px-1"
+                        >
+                          <h2 className="text-xs"> {posts.firstName} </h2>
+                          <h2 className="text-xs"> {posts.lastName} </h2>
+                        </button>
+                      )}
                       <p className="text-xs"> {result} </p>
                     </div>
                     {posts.email === user.email ? (
@@ -185,8 +196,20 @@ const Dashboard = () => {
                     )}
                   </div>
 
-                  <div className="mt-3">
-                    <h3 className="capitalize text-sm">
+                  <div
+                    className="mt-3"
+                    onClick={() => {
+                      handlePostDisplay(posts.email, posts._id);
+                      navigate("/postDisplay");
+                    }}
+                  >
+                    <h3
+                      className="capitalize text-sm"
+                      onClick={() => {
+                        handlePostDisplay(posts.email, posts._id);
+                        navigate("/postDisplay");
+                      }}
+                    >
                       {posts.postText.length > 50
                         ? posts.postText.slice(0, 200) + "..."
                         : posts.postText}

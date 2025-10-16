@@ -25,6 +25,21 @@ const PostDisplay = () => {
     .toLocaleString("en-US", options)
     .replace(",", " •");
 
+  const handleBack = () => {
+    if (window.history.length > 2) {
+      navigate(-1);
+    } else {
+      navigate("/home"); // or your default safe route
+    }
+  };
+
+  React.useEffect(() => {
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
+  }, []);
+
   return (
     <div className="relative min-h-screen">
       {loading ? (
@@ -80,7 +95,7 @@ const PostDisplay = () => {
             stroke-width="1.5"
             stroke="currentColor"
             class="size-6"
-            onClick={() => navigate(-1)}
+            onClick={handleBack}
           >
             <path
               stroke-linecap="round"
@@ -121,16 +136,20 @@ const PostDisplay = () => {
                   with spacing and simplicity in mind — clean layout without
                   distracting colors.`}
                 </p>
-
-                <img
-                  src={
-                    post && post.mediaUrl
-                      ? post.mediaUrl
-                      : "https://via.placeholder.com/48"
-                  }
-                  alt={post && post.firstName ? post.firstName : "userName"}
-                  className="w-full rounded-md border border-gray-100"
-                />
+                {post && post.mediaUrl ? (
+                  <img
+                    src={
+                      post && post.mediaUrl
+                        ? post.mediaUrl
+                        : "https://via.placeholder.com/48"
+                    }
+                    alt={post && post.firstName ? post.firstName : "userName"}
+                    loading="lazy"
+                    className="w-full h-[250px] rounded-md border border-gray-100"
+                  />
+                ) : (
+                  <p></p>
+                )}
               </div>
             </div>
 
@@ -155,12 +174,16 @@ const PostDisplay = () => {
           </div>
 
           {/* Fixed Comment Input at Bottom */}
-          <div className="fixed bottom-0 left-0 right-0 border-t border-gray-200">
+          <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200">
             <div className="max-w-2xl mx-auto px-4 py-3 flex items-center space-x-3">
               <img
-                src="https://via.placeholder.com/36"
-                alt="Your avatar"
-                className="w-9 h-9 rounded-full object-cover"
+                src={
+                  post && post.profileImage
+                    ? post.profileImage
+                    : "https://via.placeholder.com/48"
+                }
+                alt={post && post.firstName ? post.firstName : "userName"}
+                className="w-12 h-12 rounded-full object-cover"
               />
               <input
                 type="text"

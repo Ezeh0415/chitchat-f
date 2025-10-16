@@ -27,6 +27,7 @@ export function MyContextProvider({ children }) {
   const [success, setSuccess] = React.useState(false); // For both profile/post/signup/login success
   const [hasSubmitted, setHasSubmitted] = React.useState(false);
   const [postMessage, setPostMessage] = React.useState("");
+  const [comment, setComment] = React.useState("");
   const [result, setResult] = React.useState();
   const [hideNav, setHideNav] = React.useState(false);
   const [showPassword, setShowPassword] = React.useState(true);
@@ -35,6 +36,7 @@ export function MyContextProvider({ children }) {
   const storedUser = localStorage.getItem("user");
   const user = JSON.parse(storedUser);
   const { email } = user || {};
+  let commentedUser = email;
   // check if user is authenticated
   const isAuthenticated = !!localStorage.getItem("Token");
 
@@ -703,7 +705,7 @@ export function MyContextProvider({ children }) {
     setSuccess(false);
     setMessage("");
 
-    if (!email || !postId || !notif_id) {
+    if (!email || !postId) {
       setError(true);
       setMessage("Poster or liker email missing.");
       setLoading(false);
@@ -736,6 +738,56 @@ export function MyContextProvider({ children }) {
     } catch (error) {
       setError(true);
       setMessage(error.message || "Error displaying post");
+    } finally {
+      setMediaUrl("");
+      setTimeout(() => {
+        setError(false);
+      }, 3000);
+    }
+  };
+
+  const handleCommentChange = (e) => {
+    setComment(e.target.value);
+  };
+
+  const handleComment = async (PostEmail, postId, commentText) => {
+    setLoading(true);
+    setError(false);
+    setSuccess(false);
+    setMessage("");
+
+    if (!PostEmail || !postId || !commentedUser || !commentText) {
+      setError(true);
+      setMessage("empty input please try again.");
+      setLoading(false);
+      return;
+    }
+
+    try {
+      const response = await fetch(`${Base_Url}/api/commentedPost`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ PostEmail, postId, commentedUser, commentText }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data?.message || "Failed to comment on post ");
+      }
+
+      setSuccess(true);
+      setMessage("comment sent");
+      setLoading(false);
+      setTimeout(() => {
+        setSuccess(false);
+        setMessage("");
+      }, 2000);
+    } catch (error) {
+      setError(true);
+      setMessage(error.message || "Error commenting on post");
     } finally {
       setMediaUrl("");
       setTimeout(() => {
