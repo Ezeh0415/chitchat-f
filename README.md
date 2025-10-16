@@ -68,3 +68,72 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/d
 ### `npm run build` fails to minify
 
 This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+
+<!--  my exzmplae -->
+
+import React from 'react';
+import PropTypes from 'prop-types';
+
+const ErrorPage = ({ code = 500, message = "Something went wrong.", description, onBack }) => {
+const defaultDescriptions = {
+404: "The page you're looking for doesn't exist.",
+500: "Internal server error. Please try again later.",
+403: "You don't have permission to access this page.",
+};
+
+const handleBack = () => {
+if (onBack) {
+onBack();
+} else {
+window.history.back();
+}
+};
+
+return (
+<div className="flex items-center justify-center min-h-screen bg-gray-100 px-4">
+<div className="text-center max-w-md">
+<h1 className="text-7xl font-bold text-red-600">{code}</h1>
+<h2 className="text-2xl font-semibold mt-4">{message}</h2>
+<p className="mt-2 text-gray-600">
+{description || defaultDescriptions[code] || "An unexpected error occurred."}
+</p>
+<button
+          onClick={handleBack}
+          className="mt-6 px-6 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition"
+        >
+Go Back
+</button>
+</div>
+</div>
+);
+};
+
+ErrorPage.propTypes = {
+code: PropTypes.number,
+message: PropTypes.string,
+description: PropTypes.string,
+onBack: PropTypes.func,
+};
+
+export default ErrorPage;
+
+import ErrorPage from './components/ErrorPage';
+
+function NotFound() {
+return <ErrorPage code={404} message="Page Not Found" />;
+}
+
+function Forbidden() {
+return <ErrorPage code={403} />;
+}
+
+function ServerError() {
+return <ErrorPage code={500} description="We're working to fix this issue as soon as possible." />;
+}
+
+<!-- <img
+  src="small.jpg"
+  srcset="small.jpg 500w, medium.jpg 1000w, large.jpg 1500w"
+  sizes="(max-width: 600px) 500px, 1000px"
+  alt="Description"
+/> -->
