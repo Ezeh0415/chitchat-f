@@ -59,7 +59,7 @@ const NotificationPage = () => {
                             notif.read ? "text-gray-800" : "text-yellow-800"
                           }`}
                         >
-                          {notif.title.length > 50
+                          {notif.title?.length > 50
                             ? notif.title.slice(0, 30) + "..."
                             : notif.title}
                         </h4>

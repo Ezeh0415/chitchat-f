@@ -27,7 +27,7 @@ export function MyContextProvider({ children }) {
   const [success, setSuccess] = React.useState(false); // For both profile/post/signup/login success
   const [hasSubmitted, setHasSubmitted] = React.useState(false);
   const [postMessage, setPostMessage] = React.useState("");
-  const [comment, setComment] = React.useState("");
+  const [commentText, setComment] = React.useState("");
   const [result, setResult] = React.useState();
   const [hideNav, setHideNav] = React.useState(false);
   const [showPassword, setShowPassword] = React.useState(true);
@@ -751,10 +751,11 @@ export function MyContextProvider({ children }) {
   };
 
   const handleComment = async (PostEmail, postId, commentText) => {
-    setLoading(true);
     setError(false);
     setSuccess(false);
     setMessage("");
+
+    console.log(PostEmail, postId, commentedUser, commentText);
 
     if (!PostEmail || !postId || !commentedUser || !commentText) {
       setError(true);
@@ -789,7 +790,7 @@ export function MyContextProvider({ children }) {
       setError(true);
       setMessage(error.message || "Error commenting on post");
     } finally {
-      setMediaUrl("");
+      setComment("");
       setTimeout(() => {
         setError(false);
       }, 3000);
@@ -884,6 +885,11 @@ export function MyContextProvider({ children }) {
         // liked post section
         handleLikedPosts,
         handleUnLikePosts,
+
+        // comment post section
+        commentText,
+        handleCommentChange,
+        handleComment,
       }}
     >
       {children}

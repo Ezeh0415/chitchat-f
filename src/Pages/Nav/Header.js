@@ -57,7 +57,7 @@ const Header = () => {
           >
             <div className="relative py-2">
               {unreadCount ? (
-                <p className="text-xs absolute top-[-2px] left-3">
+                <p className="text-xs absolute top-[-2px] left-3 text-red-600">
                   {unreadCount}
                 </p>
               ) : (
@@ -70,7 +70,7 @@ const Header = () => {
                 viewBox="0 0 24 24"
                 stroke-width="1.5"
                 stroke="currentColor"
-                class={unreadCount ? "size-4" : "size-5"}
+                class={unreadCount ? "size-4 text-red-600" : "size-5"}
               >
                 <path
                   stroke-linecap="round"

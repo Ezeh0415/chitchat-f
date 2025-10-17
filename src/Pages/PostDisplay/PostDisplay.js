@@ -1,13 +1,17 @@
 import React from "react";
 import { useMyContext } from "../../Context/MyContext";
 import { useNavigate } from "react-router-dom";
+import Success from "../../utilites/Success";
 
 const PostDisplay = () => {
-  const { loading } = useMyContext();
+  const { loading, commentText, handleCommentChange, handleComment } =
+    useMyContext();
   const navigate = useNavigate();
   const storedUser = localStorage.getItem("postDisplay");
   const posts = JSON.parse(storedUser);
   const { post } = posts || {};
+
+  // console.log(post);
 
   const date = new Date(post.createdAt);
 
@@ -29,7 +33,7 @@ const PostDisplay = () => {
     if (window.history.length > 2) {
       navigate(-1);
     } else {
-      navigate("/home"); // or your default safe route
+      navigate("/"); // or your default safe route
     }
   };
 
@@ -87,6 +91,7 @@ const PostDisplay = () => {
         </div>
       ) : (
         <div>
+          <Success />
           {/* Main scrollable area */}
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -188,9 +193,14 @@ const PostDisplay = () => {
               <input
                 type="text"
                 placeholder="Add a comment..."
+                value={commentText}
+                onChange={handleCommentChange}
                 className="flex-1 border border-gray-300 rounded-full px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
-              <button className="text-sm px-4 py-1.5 rounded-full bg-yellow-900 text-white hover:bg-blue-700 transition">
+              <button
+                className="text-sm px-4 py-1.5 rounded-full bg-yellow-900 text-white hover:bg-blue-700 transition"
+                onClick={() => handleComment(post.email, post._id, commentText)}
+              >
                 Send
               </button>
             </div>
