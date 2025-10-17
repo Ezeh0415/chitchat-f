@@ -12,6 +12,8 @@ const NotificationPage = () => {
   const { mySuccess, user } = userProfile || {};
   const navigate = useNavigate();
 
+  console.log(user);
+
   // console.log(user);
   return (
     <section>

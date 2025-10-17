@@ -74,6 +74,16 @@ export function MyContextProvider({ children }) {
         },
       },
     },
+    {
+      url: `${Base_Url}/api/users`,
+      options: {
+        method: "GET",
+        headers: {
+          Authorization: "Bearer your_token_here",
+          Accept: "application/json",
+        },
+      },
+    },
 
     // add more requests as needed
   ];
@@ -728,7 +738,7 @@ export function MyContextProvider({ children }) {
       }
 
       setSuccess(true);
-      setMessage("Post displayed successfully");
+      setMessage("Post displayed ");
       localStorage.setItem("postDisplay", JSON.stringify(data));
       setLoading(false);
       setTimeout(() => {
@@ -797,8 +807,57 @@ export function MyContextProvider({ children }) {
     }
   };
 
+  const handleAddFriends = async (AdderEmail, ReciverEmail) => {
+    setError(false);
+    setSuccess(false);
+    setMessage("");
+
+    console.log(AdderEmail, ReciverEmail);
+
+    if (!AdderEmail || !ReciverEmail) {
+      setError(true);
+      setMessage("empty input please try again.");
+      setLoading(false);
+      return;
+    }
+
+    try {
+      const response = await fetch(`${Base_Url}/api/commentedPost`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ AdderEmail, ReciverEmail }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data?.message || "Failed to comment on post ");
+      }
+
+      setSuccess(true);
+      setMessage("comment sent");
+      setLoading(false);
+      setTimeout(() => {
+        setSuccess(false);
+        setMessage("");
+      }, 2000);
+    } catch (error) {
+      setError(true);
+      setMessage(error.message || "Error commenting on post");
+    } finally {
+      setComment("");
+      setTimeout(() => {
+        setError(false);
+      }, 3000);
+    }
+  };
+
   // function to handle multiple requests
   const [userProfile, posts] = result || [];
+
+  console.log(result);
 
   // Fetch data when email becomes available
   React.useEffect(() => {

@@ -56,14 +56,14 @@ function App() {
                 </ProtectedRoute>
               }
             />
-            {/* <Route
+            <Route
               path="/friends"
               element={
                 <ProtectedRoute isAuthenticated={isAuthenticated}>
                   <FriendRequest />
                 </ProtectedRoute>
               }
-            /> */}
+            />
             <Route
               path="/profile"
               element={

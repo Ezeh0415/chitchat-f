@@ -2,10 +2,16 @@ import React from "react";
 import { useMyContext } from "../../Context/MyContext";
 import { useNavigate } from "react-router-dom";
 import Success from "../../utilites/Success";
+import { formatDistanceToNowStrict } from "date-fns";
 
 const PostDisplay = () => {
-  const { loading, commentText, handleCommentChange, handleComment } =
-    useMyContext();
+  const {
+    loading,
+    commentText,
+    handleCommentChange,
+    handleComment,
+    handlePostDisplay,
+  } = useMyContext();
   const navigate = useNavigate();
   const storedUser = localStorage.getItem("postDisplay");
   const posts = JSON.parse(storedUser);
@@ -162,16 +168,27 @@ const PostDisplay = () => {
             <div className="mt-6 space-y-4">
               <h3 className="text-sm font-semibold text-gray-700">Comments</h3>
 
-              {[1, 2, 3].map((c) => (
-                <div key={c} className="flex items-start space-x-3">
+              {post?.comments?.map((c) => (
+                <div key={c.id} className="flex items-start space-x-1.5 mb-6">
                   <img
-                    src="https://via.placeholder.com/36"
-                    alt="Avatar"
-                    className="w-9 h-9 rounded-full object-cover"
+                    src={c?.profileImage || "https://via.placeholder.com/48"}
+                    alt={c?.firstName || "User"}
+                    className="w-10 h-10 rounded-full object-cover border border-gray-300"
                   />
-                  <div className="border border-gray-200 rounded-lg px-4 py-2 text-sm text-gray-800 w-full shadow-sm">
-                    This is a user comment. Thoughtful, concise, and clearly
-                    displayed.
+                  <div className="border border-gray-300 rounded-lg px-5 py-3 bg-white shadow-md w-full">
+                    <div className="flex items-center justify-between mb-2">
+                      <h2 className="font-semibold text-gray-900 text-base">
+                        {c?.firstName} {c?.lastName}
+                      </h2>
+                      <small className="text-gray-500 text-xs">
+                        {formatDistanceToNowStrict(new Date(c?.createdAt), {
+                          addSuffix: true,
+                        })}
+                      </small>
+                    </div>
+                    <p className="text-gray-700 text-sm leading-relaxed">
+                      {c?.commentText}
+                    </p>
                   </div>
                 </div>
               ))}
@@ -180,7 +197,7 @@ const PostDisplay = () => {
 
           {/* Fixed Comment Input at Bottom */}
           <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200">
-            <div className="max-w-2xl mx-auto px-4 py-3 flex items-center space-x-3">
+            <div className="max-w-2xl mx-auto px-4 py-3 flex items-center space-x-1.5">
               <img
                 src={
                   post && post.profileImage

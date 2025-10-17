@@ -30,7 +30,7 @@ const Dashboard = () => {
   return (
     <div>
       <main className="relative  ">
-        <div className="md:hidden">
+        <div className="lg:hidden">
           <Navbar />
         </div>
 
@@ -50,12 +50,13 @@ const Dashboard = () => {
             <span className="flex items-center gap-2 ">
               <Link to="/profile">
                 <img
-                  alt={user && user ? user.firstName : "fprofile picture"}
                   src={
-                    user && user
+                    user && user.profileImage
                       ? user.profileImage
-                      : "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
+                      : "https://via.placeholder.com/48"
                   }
+                  alt={user && user.firstName ? user.firstName : "userName"}
+                  loading="lazy"
                   className="size-8 rounded-sm bg-gray-800 outline -outline-offset-1 outline-white/10"
                 />
               </Link>
@@ -111,6 +112,7 @@ const Dashboard = () => {
 
           {data && data?.length > 0 ? (
             data.map((posts) => {
+              console.log(posts);
               const result = formatDistanceToNowStrict(
                 new Date(`${posts.createdAt}`),
                 {
@@ -138,8 +140,16 @@ const Dashboard = () => {
                     {posts.email === user.email ? (
                       <Link to={`/profile`}>
                         <img
-                          alt={posts.firstName}
-                          src={posts.profileImage}
+                          src={
+                            posts.profileImage
+                              ? posts.profileImage
+                              : "https://via.placeholder.com/48"
+                          }
+                          alt={
+                            posts && posts.firstName
+                              ? posts.firstName
+                              : "userName"
+                          }
                           loading="lazy"
                           className="w-[25px] h-[25px] rounded-full"
                         />
@@ -265,10 +275,12 @@ const Dashboard = () => {
                         stroke-width="1.5"
                         stroke="currentColor"
                         class={`size-4  ${
-                          posts.comments?.length
-                            ? "size-5 text-white p-1 bg-yellow-800 rounded-full"
-                            : ""
+                          posts.comments?.length ? "size-5  rounded-full" : ""
                         }`}
+                        onClick={() => {
+                          handlePostDisplay(posts.email, posts._id);
+                          navigate("/postDisplay");
+                        }}
                       >
                         <path
                           stroke-linecap="round"
@@ -276,9 +288,17 @@ const Dashboard = () => {
                           d="M12 20.25c4.97 0 9-3.694 9-8.25s-4.03-8.25-9-8.25S3 7.444 3 12c0 2.104.859 4.023 2.273 5.48.432.447.74 1.04.586 1.641a4.483 4.483 0 0 1-.923 1.785A5.969 5.969 0 0 0 6 21c1.282 0 2.47-.402 3.445-1.087.81.22 1.668.337 2.555.337Z"
                         />
                       </svg>
-                      <p className="text-sm">
-                        <p className="text-sm">{posts.comments?.length}</p>
-                      </p>
+                      <div className="text-sm">
+                        <p
+                          className="text-sm"
+                          onClick={() => {
+                            handlePostDisplay(posts.email, posts._id);
+                            navigate("/postDisplay");
+                          }}
+                        >
+                          {posts.comments?.length}
+                        </p>
+                      </div>
                     </span>
 
                     <span className="flex items-center gap-1">
