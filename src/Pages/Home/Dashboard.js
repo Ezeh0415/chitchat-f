@@ -112,7 +112,6 @@ const Dashboard = () => {
 
           {data && data?.length > 0 ? (
             data.map((posts) => {
-              console.log(posts);
               const result = formatDistanceToNowStrict(
                 new Date(`${posts.createdAt}`),
                 {

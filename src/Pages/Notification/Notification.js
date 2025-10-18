@@ -12,9 +12,10 @@ const NotificationPage = () => {
   const { mySuccess, user } = userProfile || {};
   const navigate = useNavigate();
 
-  console.log(user);
+  const hasNotifications =
+    user?.notifications?.length > 0 ||
+    user?.FriendRequestsNotifications?.length > 0;
 
-  // console.log(user);
   return (
     <section>
       <Navbar />
@@ -25,86 +26,160 @@ const NotificationPage = () => {
             Notifications
           </h2>
 
-          {user && user.notifications?.length > 0 ? (
-            <ul className="space-y-4">
-              {user &&
-                [...user.notifications].reverse().map((notif) => (
-                  <li
-                    key={notif.id}
-                    className={`flex items-center gap-4 p-4 rounded-lg border transition-shadow ${
-                      notif.read
-                        ? "bg-white border-gray-200"
-                        : "bg-yellow-50 border-yellow-300 shadow-sm"
-                    } hover:shadow-md`}
-                    aria-live="polite"
-                    onClick={() => {
-                      handlePostDisplay(
-                        notif.postOwnerEmail,
-                        notif.post_id,
-                        notif.notif_id
-                      );
-                      navigate("/postDisplay");
-                    }}
-                  >
-                    {/* Profile image */}
-                    <img
-                      src={user?.profileImage}
-                      alt="User profile"
-                      className="w-10 h-10 rounded-full object-cover"
-                    />
+          {hasNotifications ? (
+            <div>
+              <ul className="space-y-4">
+                {user &&
+                  [...user.notifications].reverse().map((notif) => (
+                    <li
+                      key={notif.id}
+                      className={`flex items-center gap-4 p-4 rounded-lg border transition-shadow ${
+                        notif.read
+                          ? "bg-white border-gray-200"
+                          : "bg-yellow-50 border-yellow-300 shadow-sm"
+                      } hover:shadow-md`}
+                      aria-live="polite"
+                      onClick={() => {
+                        handlePostDisplay(
+                          notif.postOwnerEmail,
+                          notif.post_id,
+                          notif.notif_id
+                        );
+                        navigate("/postDisplay");
+                      }}
+                    >
+                      {/* Profile image */}
+                      <img
+                        src={user?.profileImage}
+                        alt="User profile"
+                        className="w-10 h-10 rounded-full object-cover"
+                      />
 
-                    {/* Notification content */}
-                    <div className="flex-1">
-                      <div className="flex justify-between items-center">
-                        <h4
-                          className={`text-sm font-medium ${
-                            notif.read ? "text-gray-800" : "text-yellow-800"
-                          }`}
-                        >
-                          {notif.title?.length > 50
-                            ? notif.title.slice(0, 30) + "..."
-                            : notif.title}
-                        </h4>
-                      </div>
+                      {/* Notification content */}
+                      <div className="flex-1">
+                        <div className="flex justify-between items-center">
+                          <h4
+                            className={`text-sm font-medium ${
+                              notif.read ? "text-gray-800" : "text-yellow-800"
+                            }`}
+                          >
+                            {notif.title?.length > 50
+                              ? notif.title.slice(0, 30) + "..."
+                              : notif.title}
+                          </h4>
+                        </div>
 
-                      <div>
-                        {/* Timestamp */}
-                        <span
-                          className={`text-xs px-2 py-0.5 mb-1 mt-1 rounded-full ${
-                            notif.read
-                              ? "bg-gray-100 text-gray-500"
-                              : "bg-yellow-100 text-yellow-800"
-                          }`}
-                        >
-                          {formatDistanceToNowStrict(
-                            new Date(notif.createdAt),
-                            {
-                              addSuffix: true,
-                            }
+                        <div>
+                          {/* Timestamp */}
+                          <span
+                            className={`text-xs px-2 py-0.5 mb-1 mt-1 rounded-full ${
+                              notif.read
+                                ? "bg-gray-100 text-gray-500"
+                                : "bg-yellow-100 text-yellow-800"
+                            }`}
+                          >
+                            {formatDistanceToNowStrict(
+                              new Date(notif.createdAt),
+                              {
+                                addSuffix: true,
+                              }
+                            )}
+                          </span>
+
+                          {/* Optional subtitle or description */}
+                          {notif.userDid && (
+                            <p className="text-sm text-gray-600 mt-1">
+                              {notif.firstName} : {notif.userDid}
+                            </p>
                           )}
-                        </span>
-
-                        {/* Optional subtitle or description */}
-                        {notif.userDid && (
-                          <p className="text-sm text-gray-600 mt-1">
-                            {notif.firstName} : {notif.userDid}
-                          </p>
-                        )}
+                        </div>
                       </div>
-                    </div>
 
-                    {/* Unread indicator */}
-                    {!notif.read && (
-                      <div className="mt-1">
-                        <span
-                          className="inline-block w-3 h-3 bg-green-500 rounded-full"
-                          title="Unread"
+                      {/* Unread indicator */}
+                      {!notif.read && (
+                        <div className="mt-1">
+                          <span
+                            className="inline-block w-3 h-3 bg-green-500 rounded-full"
+                            title="Unread"
+                          />
+                        </div>
+                      )}
+                    </li>
+                  ))}
+              </ul>
+              {/* friend request notification */}
+              <ul className="space-y-4 mt-4">
+                {user &&
+                  [...user.FriendRequestsNotifications]
+                    .reverse()
+                    .map((notif) => (
+                      <li
+                        key={notif.id}
+                        className={`flex items-center gap-4 p-4 rounded-lg border transition-shadow ${
+                          notif.read
+                            ? "bg-white border-gray-200"
+                            : "bg-yellow-50 border-yellow-300 shadow-sm"
+                        } hover:shadow-md`}
+                        aria-live="polite"
+                      >
+                        {/* Profile image */}
+                        <img
+                          src={user?.profileImage}
+                          alt="User profile"
+                          className="w-10 h-10 rounded-full object-cover"
                         />
-                      </div>
-                    )}
-                  </li>
-                ))}
-            </ul>
+
+                        {/* Notification content */}
+                        <div className="flex-1">
+                          <div className="flex justify-between items-center">
+                            <h4
+                              className={`text-sm font-medium ${
+                                notif.read ? "text-gray-800" : "text-yellow-800"
+                              }`}
+                            >
+                              {notif.firstName} {""} {notif.lastName}
+                            </h4>
+                          </div>
+
+                          <div>
+                            {/* Timestamp */}
+                            <span
+                              className={`text-xs px-2 py-0.5 mb-1 mt-1 rounded-full ${
+                                notif.read
+                                  ? "bg-gray-100 text-gray-500"
+                                  : "bg-yellow-100 text-yellow-800"
+                              }`}
+                            >
+                              {formatDistanceToNowStrict(
+                                new Date(notif.createdAt),
+                                {
+                                  addSuffix: true,
+                                }
+                              )}
+                            </span>
+
+                            {/* Optional subtitle or description */}
+                            {notif.userDid && (
+                              <p className="text-sm text-gray-600 mt-1">
+                                {notif.firstName} : {notif.userDid}
+                              </p>
+                            )}
+                          </div>
+                        </div>
+
+                        {/* Unread indicator */}
+                        {!notif.read && (
+                          <div className="mt-1">
+                            <span
+                              className="inline-block w-3 h-3 bg-green-500 rounded-full"
+                              title="Unread"
+                            />
+                          </div>
+                        )}
+                      </li>
+                    ))}
+              </ul>
+            </div>
           ) : (
             <div className="flex flex-col items-center justify-center mt-24 text-center animate-fade-in-up">
               {/* Animated SVG Bell with subtle ring motion */}

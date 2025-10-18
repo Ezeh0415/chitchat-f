@@ -807,14 +807,12 @@ export function MyContextProvider({ children }) {
     }
   };
 
-  const handleAddFriends = async (AdderEmail, ReciverEmail) => {
+  const handleAddFriends = async (ReciverEmail) => {
     setError(false);
     setSuccess(false);
     setMessage("");
 
-    console.log(AdderEmail, ReciverEmail);
-
-    if (!AdderEmail || !ReciverEmail) {
+    if (!email || !ReciverEmail) {
       setError(true);
       setMessage("empty input please try again.");
       setLoading(false);
@@ -822,22 +820,24 @@ export function MyContextProvider({ children }) {
     }
 
     try {
-      const response = await fetch(`${Base_Url}/api/commentedPost`, {
+      const response = await fetch(`${Base_Url}/api/addFriends`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ AdderEmail, ReciverEmail }),
+        body: JSON.stringify({ AdderEmail: email, ReciverEmail }),
       });
 
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data?.message || "Failed to comment on post ");
+        throw new Error(
+          data?.message || "Failed to send friend request to user "
+        );
       }
 
       setSuccess(true);
-      setMessage("comment sent");
+      setMessage("friend request sent");
       setLoading(false);
       setTimeout(() => {
         setSuccess(false);
@@ -845,7 +845,7 @@ export function MyContextProvider({ children }) {
       }, 2000);
     } catch (error) {
       setError(true);
-      setMessage(error.message || "Error commenting on post");
+      setMessage(error.message || "Error sending friend request");
     } finally {
       setComment("");
       setTimeout(() => {
@@ -855,9 +855,7 @@ export function MyContextProvider({ children }) {
   };
 
   // function to handle multiple requests
-  const [userProfile, posts] = result || [];
-
-  console.log(result);
+  const [userProfile, posts, Users] = result || [];
 
   // Fetch data when email becomes available
   React.useEffect(() => {
@@ -885,6 +883,8 @@ export function MyContextProvider({ children }) {
         // fetch requests section start
         userProfile,
         posts,
+        Users,
+        email,
         // fetch request section end
 
         // image section setup
@@ -949,6 +949,9 @@ export function MyContextProvider({ children }) {
         commentText,
         handleCommentChange,
         handleComment,
+
+        // Add friends section
+        handleAddFriends,
       }}
     >
       {children}

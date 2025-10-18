@@ -33,6 +33,22 @@ const ProfilePage = () => {
 
   const age = user?.dob ? calculateAge(user.dob) : null;
 
+  const date = new Date(user.createdAt);
+
+  const options = {
+    year: "numeric",
+    month: "long", // full month name
+    day: "numeric",
+    // hour: "numeric",
+    // minute: "2-digit",
+    // hour12: true, // 12-hour format with AM/PM
+    timeZone: "UTC", // or use your local timezone if you want
+  };
+
+  const formattedDate = date
+    .toLocaleString("en-US", options)
+    .replace(",", " •");
+
   return (
     <main className="relative">
       {/* <div className="bg-gray-700/50 w-[100vw] h-[98vh] absolute">
@@ -78,11 +94,18 @@ const ProfilePage = () => {
 
                   {/* User Information Rows */}
                   <UserInfoRow icon="📧" label="Email" value={user?.email} />
+
                   <UserInfoRow
                     icon="🧑‍💼"
                     label="Username"
                     value={user?.firstName && `@${user.lastName}`}
                   />
+                  <UserInfoRow
+                    icon="📅"
+                    label="createdAt"
+                    value={user?.firstName && `@${formattedDate}`}
+                  />
+
                   <UserInfoRow
                     icon="📍"
                     label="Location"
@@ -142,8 +165,6 @@ const ProfilePage = () => {
           )}
         </div>
       </div>
-      {/* model section */}
-      <Model email={(user && user.email) || ""} />
 
       {/* post section  */}
       <section>
@@ -293,8 +314,7 @@ const ProfilePage = () => {
               No Posts Found
             </h2>
             <p className="text-gray-500 text-center max-w-md">
-              It looks like this user hasn’t shared anything yet. When they do,
-              their posts will show up here.
+              create a post to be displayed here
             </p>
           </div>
         )}

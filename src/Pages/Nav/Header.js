@@ -5,8 +5,6 @@ import { useMyContext } from "../../Context/MyContext";
 const Header = () => {
   const { userProfile } = useMyContext();
   const { mySuccess, user } = userProfile || {};
-
-  const { notifications } = user || {};
   // const readValues = notifications.map((notification) => notification.read);
 
   // console.log(readValues);
@@ -15,9 +13,10 @@ const Header = () => {
   // );
   // console.log(hasUnread); // true
   // const readCount = notifications.filter((n) => n.read).length;
-  const unreadCount = notifications
-    ? notifications.filter((n) => !n.read).length
-    : 0;
+  const unreadCount = [
+    ...(user?.notifications || []),
+    ...(user?.FriendRequestsNotifications || []),
+  ].filter((n) => !n.read).length;
 
   // console.log(`Read: ${readCount}, Unread: ${unreadCount}`);
 

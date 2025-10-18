@@ -64,6 +64,7 @@ function App() {
                 </ProtectedRoute>
               }
             />
+
             <Route
               path="/profile"
               element={
@@ -71,16 +72,16 @@ function App() {
                   <ProfilePage />
                 </ProtectedRoute>
               }
-            >
-              <Route
-                path="editProfile"
-                element={
-                  <ProtectedRoute isAuthenticated={isAuthenticated}>
-                    <EditProfilePage />
-                  </ProtectedRoute>
-                }
-              />
-            </Route>
+            />
+
+            <Route
+              path="editProfile"
+              element={
+                <ProtectedRoute isAuthenticated={isAuthenticated}>
+                  <EditProfilePage />
+                </ProtectedRoute>
+              }
+            />
             <Route
               path="/UserProfile"
               element={

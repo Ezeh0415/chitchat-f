@@ -4,16 +4,9 @@ import { useMyContext } from "../../Context/MyContext";
 
 const FriendRequest = () => {
   const navigate = useNavigate();
-  const {
-    userData,
-    friendError,
-    friendMessage,
-    friendLoading,
-    Useridentification,
-  } = useMyContext();
+  const { Users, email: loginEmail, handleAddFriends } = useMyContext();
 
-  const { totalCount, data } = userData || [];
-  const { email: LoggedInEmail } = Useridentification || {};
+  const { totalCount, data } = Users || [];
 
   return (
     <main>
@@ -63,7 +56,7 @@ const FriendRequest = () => {
               const { _id, firstName, lastName, profileImage, email } = user;
               return (
                 <div key={_id}>
-                  {email !== LoggedInEmail && (
+                  {email !== loginEmail && (
                     <div className="mt-3 flex gap-3">
                       <img
                         src={
@@ -80,7 +73,12 @@ const FriendRequest = () => {
                           <h1> {lastName} </h1>
                         </span>
                         <span className="flex items-center  mt-1 capitalize">
-                          <h3 className="border px-2 rounded-md">connect</h3>
+                          <h3
+                            className="border px-2 rounded-md"
+                            onClick={() => handleAddFriends(email)}
+                          >
+                            connect
+                          </h3>
                         </span>
                       </div>
                     </div>
@@ -90,7 +88,83 @@ const FriendRequest = () => {
             })}
           </div>
         ) : (
-          <h1 className="text-xl capitalize mt-4">loading</h1>
+          <div>
+            <div className="mt-3 flex gap-3 animate-pulse">
+              {/* Skeleton Image */}
+              <div className="w-[55px] h-[55px] rounded-md bg-gray-300" />
+
+              <div className="flex flex-col justify-center gap-2">
+                {/* Skeleton Name */}
+                <div className="flex gap-2">
+                  <div className="h-4 w-20 bg-gray-300 rounded"></div>
+                  <div className="h-4 w-20 bg-gray-300 rounded"></div>
+                </div>
+
+                {/* Skeleton Connect Button */}
+                <div className="h-6 w-24 bg-gray-300 rounded"></div>
+              </div>
+            </div>
+            <div className="mt-3 flex gap-3 animate-pulse">
+              {/* Skeleton Image */}
+              <div className="w-[55px] h-[55px] rounded-md bg-gray-300" />
+
+              <div className="flex flex-col justify-center gap-2">
+                {/* Skeleton Name */}
+                <div className="flex gap-2">
+                  <div className="h-4 w-20 bg-gray-300 rounded"></div>
+                  <div className="h-4 w-20 bg-gray-300 rounded"></div>
+                </div>
+
+                {/* Skeleton Connect Button */}
+                <div className="h-6 w-24 bg-gray-300 rounded"></div>
+              </div>
+            </div>
+            <div className="mt-3 flex gap-3 animate-pulse">
+              {/* Skeleton Image */}
+              <div className="w-[55px] h-[55px] rounded-md bg-gray-300" />
+
+              <div className="flex flex-col justify-center gap-2">
+                {/* Skeleton Name */}
+                <div className="flex gap-2">
+                  <div className="h-4 w-20 bg-gray-300 rounded"></div>
+                  <div className="h-4 w-20 bg-gray-300 rounded"></div>
+                </div>
+
+                {/* Skeleton Connect Button */}
+                <div className="h-6 w-24 bg-gray-300 rounded"></div>
+              </div>
+            </div>
+            <div className="mt-3 flex gap-3 animate-pulse">
+              {/* Skeleton Image */}
+              <div className="w-[55px] h-[55px] rounded-md bg-gray-300" />
+
+              <div className="flex flex-col justify-center gap-2">
+                {/* Skeleton Name */}
+                <div className="flex gap-2">
+                  <div className="h-4 w-20 bg-gray-300 rounded"></div>
+                  <div className="h-4 w-20 bg-gray-300 rounded"></div>
+                </div>
+
+                {/* Skeleton Connect Button */}
+                <div className="h-6 w-24 bg-gray-300 rounded"></div>
+              </div>
+            </div>
+            <div className="mt-3 flex gap-3 animate-pulse">
+              {/* Skeleton Image */}
+              <div className="w-[55px] h-[55px] rounded-md bg-gray-300" />
+
+              <div className="flex flex-col justify-center gap-2">
+                {/* Skeleton Name */}
+                <div className="flex gap-2">
+                  <div className="h-4 w-20 bg-gray-300 rounded"></div>
+                  <div className="h-4 w-20 bg-gray-300 rounded"></div>
+                </div>
+
+                {/* Skeleton Connect Button */}
+                <div className="h-6 w-24 bg-gray-300 rounded"></div>
+              </div>
+            </div>
+          </div>
         )}
       </section>
     </main>

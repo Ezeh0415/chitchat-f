@@ -2,6 +2,7 @@ import React from "react";
 import Navbar from "../Nav/Navbar";
 import { useNavigate } from "react-router-dom";
 import { useMyContext } from "../../Context/MyContext";
+import Model from "../../utilites/Model";
 
 const EditProfilePage = () => {
   const {
@@ -128,6 +129,8 @@ const EditProfilePage = () => {
           </form>
         </div>
       </div>
+      {/* model section */}
+      <Model email={(user && user.email) || ""} />
     </main>
   );
 };
