@@ -853,6 +853,107 @@ export function MyContextProvider({ children }) {
       }, 3000);
     }
   };
+  const handleAcceptFriends = async (ReciverEmail, requestId) => {
+    setError(false);
+    setSuccess(false);
+    setMessage("");
+
+    if (!email || !ReciverEmail || !requestId) {
+      setError(true);
+      setMessage("empty input please try again.");
+      setLoading(false);
+      return;
+    }
+
+    console.log(email, ReciverEmail, requestId);
+
+    try {
+      const response = await fetch(
+        `${Base_Url}/api/acceptFriendRequest/${requestId}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ usersEmail: email, ReciverEmail }),
+        }
+      );
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(
+          data?.message || "Failed to accept friend request to user "
+        );
+      }
+
+      setSuccess(true);
+      setMessage("friend request accepted");
+      setLoading(false);
+      setTimeout(() => {
+        setSuccess(false);
+        setMessage("");
+      }, 2000);
+    } catch (error) {
+      setError(true);
+      setMessage(error.message || "Error accepting friend request");
+    } finally {
+      setComment("");
+      setTimeout(() => {
+        setError(false);
+      }, 3000);
+    }
+  };
+
+  const handleDeleteFriendRequests = async (requestId) => {
+    setError(false);
+    setSuccess(false);
+    setMessage("");
+
+    if (!email) {
+      setError(true);
+      setMessage("empty input please try again.");
+      setLoading(false);
+      return;
+    }
+
+    try {
+      const response = await fetch(
+        `${Base_Url}/api/deleteFriendRequest/${requestId}`,
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ email }),
+        }
+      );
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(
+          data?.message || "Failed to send friend request to user "
+        );
+      }
+
+      setSuccess(true);
+      setMessage("friend request sent");
+      setLoading(false);
+      setTimeout(() => {
+        setSuccess(false);
+        setMessage("");
+      }, 2000);
+    } catch (error) {
+      setError(true);
+      setMessage(error.message || "Error sending friend request");
+    } finally {
+      setComment("");
+      setTimeout(() => {
+        setError(false);
+      }, 3000);
+    }
+  };
 
   // function to handle multiple requests
   const [userProfile, posts, Users] = result || [];
@@ -952,6 +1053,8 @@ export function MyContextProvider({ children }) {
 
         // Add friends section
         handleAddFriends,
+        handleAcceptFriends,
+        handleDeleteFriendRequests,
       }}
     >
       {children}

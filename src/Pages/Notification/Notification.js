@@ -12,6 +12,8 @@ const NotificationPage = () => {
   const { mySuccess, user } = userProfile || {};
   const navigate = useNavigate();
 
+  console.log(user);
+
   const hasNotifications =
     user?.notifications?.length > 0 ||
     user?.FriendRequestsNotifications?.length > 0;

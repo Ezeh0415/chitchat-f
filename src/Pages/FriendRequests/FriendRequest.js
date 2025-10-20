@@ -4,9 +4,18 @@ import { useMyContext } from "../../Context/MyContext";
 
 const FriendRequest = () => {
   const navigate = useNavigate();
-  const { Users, email: loginEmail, handleAddFriends } = useMyContext();
+  const {
+    Users,
+    email: loginEmail,
+    handleAddFriends,
+    userProfile,
+    handleAcceptFriends,
+    handleDeleteFriendRequests,
+  } = useMyContext();
 
   const { totalCount, data } = Users || [];
+  const { mySuccess, user } = userProfile || {};
+  const { FriendRequest } = user || {};
 
   return (
     <main>
@@ -30,23 +39,68 @@ const FriendRequest = () => {
           <h1 className="text-xl capitalize ">Friend requests</h1>
         </div>
 
-        <div className="mt-3 flex gap-3">
-          <img
-            src="logo/premium_photo-1673002094195-f18084be89ce.avif"
-            alt="live random image"
-            className="w-[55px] h-[55px] rounded-md"
-          />
+        {FriendRequest && FriendRequest.length > 0 ? (
           <div>
-            <span className="flex items-center gap-2 capitalize">
-              <h1>firstName</h1>
-              <h1>lastName</h1>
-            </span>
-            <span className="flex items-center gap-5 mt-1 capitalize">
-              <h3 className="border px-2 rounded-md">decline</h3>
-              <h3 className="border px-2 rounded-md">connect</h3>
-            </span>
+            {FriendRequest.map((user) => {
+              return (
+                <div key={user._id} className="mt-3 flex gap-3">
+                  <img
+                    src={
+                      user.profileImage
+                        ? user.profileImage
+                        : "logo/premium_photo-1673002094195-f18084be89ce.avif"
+                    }
+                    alt={user.firstName}
+                    className="w-[55px] h-[55px] rounded-md"
+                  />
+                  <div>
+                    <span className="flex items-center gap-2 capitalize">
+                      <h1>{user.firstName}</h1>
+                      <h1>{user.lastName}</h1>
+                    </span>
+                    <span className="flex items-center gap-5 mt-1 capitalize">
+                      <h3
+                        className="border px-2 rounded-md"
+                        onClick={() => handleDeleteFriendRequests(user._id)}
+                      >
+                        decline
+                      </h3>
+                      <h3
+                        className="border px-2 rounded-md"
+                        onClick={() =>
+                          handleAcceptFriends(user._id, user.email)
+                        }
+                      >
+                        Accept
+                      </h3>
+                    </span>
+                  </div>
+                </div>
+              );
+            })}
           </div>
-        </div>
+        ) : (
+          <div>
+            {FriendRequest && FriendRequest.length > 0 ? (
+              <div>no post now</div>
+            ) : (
+              <div>
+                {[...Array(2)].map((_, idx) => (
+                  <div key={idx} className="mt-3 flex gap-3 animate-pulse">
+                    <div className="w-[55px] h-[55px] rounded-md bg-gray-300" />
+                    <div className="flex flex-col justify-center gap-2">
+                      <div className="flex gap-2">
+                        <div className="h-4 w-20 bg-gray-300 rounded"></div>
+                        <div className="h-4 w-20 bg-gray-300 rounded"></div>
+                      </div>
+                      <div className="h-6 w-24 bg-gray-300 rounded"></div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
       </section>
       <section>
         <h1 className="text-xl capitalize mt-4">active users</h1>
@@ -54,116 +108,63 @@ const FriendRequest = () => {
           <div>
             {data.map((user) => {
               const { _id, firstName, lastName, profileImage, email } = user;
+
+              // Skip rendering if the user is the logged-in user
+              if (email === loginEmail) return null;
+
+              // Skip rendering if the user already has a friend request
+              const alreadyRequested = FriendRequest.some(
+                (req) => req.email === email
+              );
+
+              // console.log(FriendRequest);
+
               return (
-                <div key={_id}>
-                  {email !== loginEmail && (
-                    <div className="mt-3 flex gap-3">
-                      <img
-                        src={
-                          profileImage
-                            ? profileImage
-                            : "logo/premium_photo-1673002094195-f18084be89ce.avif"
-                        }
-                        alt={firstName}
-                        className="w-[55px] h-[55px] rounded-md"
-                      />
-                      <div>
-                        <span className="flex items-center gap-2 capitalize">
-                          <h1>{firstName}</h1>
-                          <h1> {lastName} </h1>
-                        </span>
-                        <span className="flex items-center  mt-1 capitalize">
-                          <h3
-                            className="border px-2 rounded-md"
-                            onClick={() => handleAddFriends(email)}
-                          >
-                            connect
-                          </h3>
-                        </span>
-                      </div>
-                    </div>
-                  )}
+                <div key={_id} className="mt-3 flex gap-3">
+                  <img
+                    src={
+                      profileImage
+                        ? profileImage
+                        : "logo/premium_photo-1673002094195-f18084be89ce.avif"
+                    }
+                    alt={firstName}
+                    className="w-[55px] h-[55px] rounded-md"
+                  />
+                  <div>
+                    <span className="flex items-center gap-2 capitalize">
+                      <h1>{firstName}</h1>
+                      <h1>{lastName}</h1>
+                    </span>
+                    <span className="flex items-center mt-1 capitalize">
+                      {!alreadyRequested && (
+                        <h3
+                          className="border px-2 rounded-md cursor-pointer"
+                          onClick={() => handleAddFriends(email)}
+                        >
+                          connect
+                        </h3>
+                      )}
+                    </span>
+                  </div>
                 </div>
               );
             })}
           </div>
         ) : (
+          // Skeleton loading section remains unchanged
           <div>
-            <div className="mt-3 flex gap-3 animate-pulse">
-              {/* Skeleton Image */}
-              <div className="w-[55px] h-[55px] rounded-md bg-gray-300" />
-
-              <div className="flex flex-col justify-center gap-2">
-                {/* Skeleton Name */}
-                <div className="flex gap-2">
-                  <div className="h-4 w-20 bg-gray-300 rounded"></div>
-                  <div className="h-4 w-20 bg-gray-300 rounded"></div>
+            {[...Array(5)].map((_, idx) => (
+              <div key={idx} className="mt-3 flex gap-3 animate-pulse">
+                <div className="w-[55px] h-[55px] rounded-md bg-gray-300" />
+                <div className="flex flex-col justify-center gap-2">
+                  <div className="flex gap-2">
+                    <div className="h-4 w-20 bg-gray-300 rounded"></div>
+                    <div className="h-4 w-20 bg-gray-300 rounded"></div>
+                  </div>
+                  <div className="h-6 w-24 bg-gray-300 rounded"></div>
                 </div>
-
-                {/* Skeleton Connect Button */}
-                <div className="h-6 w-24 bg-gray-300 rounded"></div>
               </div>
-            </div>
-            <div className="mt-3 flex gap-3 animate-pulse">
-              {/* Skeleton Image */}
-              <div className="w-[55px] h-[55px] rounded-md bg-gray-300" />
-
-              <div className="flex flex-col justify-center gap-2">
-                {/* Skeleton Name */}
-                <div className="flex gap-2">
-                  <div className="h-4 w-20 bg-gray-300 rounded"></div>
-                  <div className="h-4 w-20 bg-gray-300 rounded"></div>
-                </div>
-
-                {/* Skeleton Connect Button */}
-                <div className="h-6 w-24 bg-gray-300 rounded"></div>
-              </div>
-            </div>
-            <div className="mt-3 flex gap-3 animate-pulse">
-              {/* Skeleton Image */}
-              <div className="w-[55px] h-[55px] rounded-md bg-gray-300" />
-
-              <div className="flex flex-col justify-center gap-2">
-                {/* Skeleton Name */}
-                <div className="flex gap-2">
-                  <div className="h-4 w-20 bg-gray-300 rounded"></div>
-                  <div className="h-4 w-20 bg-gray-300 rounded"></div>
-                </div>
-
-                {/* Skeleton Connect Button */}
-                <div className="h-6 w-24 bg-gray-300 rounded"></div>
-              </div>
-            </div>
-            <div className="mt-3 flex gap-3 animate-pulse">
-              {/* Skeleton Image */}
-              <div className="w-[55px] h-[55px] rounded-md bg-gray-300" />
-
-              <div className="flex flex-col justify-center gap-2">
-                {/* Skeleton Name */}
-                <div className="flex gap-2">
-                  <div className="h-4 w-20 bg-gray-300 rounded"></div>
-                  <div className="h-4 w-20 bg-gray-300 rounded"></div>
-                </div>
-
-                {/* Skeleton Connect Button */}
-                <div className="h-6 w-24 bg-gray-300 rounded"></div>
-              </div>
-            </div>
-            <div className="mt-3 flex gap-3 animate-pulse">
-              {/* Skeleton Image */}
-              <div className="w-[55px] h-[55px] rounded-md bg-gray-300" />
-
-              <div className="flex flex-col justify-center gap-2">
-                {/* Skeleton Name */}
-                <div className="flex gap-2">
-                  <div className="h-4 w-20 bg-gray-300 rounded"></div>
-                  <div className="h-4 w-20 bg-gray-300 rounded"></div>
-                </div>
-
-                {/* Skeleton Connect Button */}
-                <div className="h-6 w-24 bg-gray-300 rounded"></div>
-              </div>
-            </div>
+            ))}
           </div>
         )}
       </section>
