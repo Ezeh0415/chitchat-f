@@ -10,16 +10,13 @@ const PostDisplay = () => {
     commentText,
     handleCommentChange,
     handleComment,
+    postDisplay,
     handlePostDisplay,
   } = useMyContext();
   const navigate = useNavigate();
-  const storedUser = localStorage.getItem("postDisplay");
-  const posts = JSON.parse(storedUser);
-  const { post } = posts || {};
+  const post = postDisplay?.post;
 
-  // console.log(post);
-
-  const date = new Date(post.createdAt);
+  const date = new Date(postDisplay?.post.createdAt);
 
   const options = {
     year: "numeric",
@@ -43,12 +40,22 @@ const PostDisplay = () => {
     }
   };
 
+  let Email = localStorage.getItem("postDisplayEmail");
+  let post_id = localStorage.getItem("postDisplayPostId");
+
   React.useEffect(() => {
     window.scrollTo({
       top: 0,
       behavior: "smooth",
     });
-  }, []);
+    handlePostDisplay(Email, post_id);
+  }, [postDisplay, Email, post_id]);
+
+  const handleRerunPostDisplay = () => {
+    setTimeout(() => {
+      handlePostDisplay(Email, post_id);
+    }, 2000);
+  };
 
   return (
     <div className="relative min-h-screen">
@@ -167,8 +174,7 @@ const PostDisplay = () => {
             {/* Comments */}
             <div className="mt-6 space-y-4">
               <h3 className="text-sm font-semibold text-gray-700">Comments</h3>
-
-              {post?.comments?.map((c) => (
+              {[...(post?.comments || [])].reverse().map((c) => (
                 <div key={c.id} className="flex items-start space-x-1.5 mb-6">
                   <img
                     src={c?.profileImage || "https://via.placeholder.com/48"}
@@ -216,7 +222,10 @@ const PostDisplay = () => {
               />
               <button
                 className="text-sm px-4 py-1.5 rounded-full bg-yellow-900 text-white hover:bg-blue-700 transition"
-                onClick={() => handleComment(post.email, post._id, commentText)}
+                onClick={() => {
+                  handleComment(post.email, post._id, commentText);
+                  handleRerunPostDisplay();
+                }}
               >
                 Send
               </button>

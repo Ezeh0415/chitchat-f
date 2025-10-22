@@ -1,4 +1,3 @@
-import React from "react";
 import { useNavigate } from "react-router-dom";
 import { useMyContext } from "../../Context/MyContext";
 
@@ -11,11 +10,31 @@ const FriendRequest = () => {
     userProfile,
     handleAcceptFriends,
     handleDeleteFriendRequests,
+    loading,
   } = useMyContext();
 
   const { totalCount, data } = Users || [];
   const { mySuccess, user } = userProfile || {};
-  const { FriendRequest } = user || {};
+  const { FriendRequest, Friends } = user || {};
+
+  if (loading) {
+    return (
+      <div>
+        {[...Array(2)].map((_, idx) => (
+          <div key={idx} className="mt-3 flex gap-3 animate-pulse">
+            <div className="w-[55px] h-[55px] rounded-md bg-gray-300" />
+            <div className="flex flex-col justify-center gap-2">
+              <div className="flex gap-2">
+                <div className="h-4 w-20 bg-gray-300 rounded"></div>
+                <div className="h-4 w-20 bg-gray-300 rounded"></div>
+              </div>
+              <div className="h-6 w-24 bg-gray-300 rounded"></div>
+            </div>
+          </div>
+        ))}
+      </div>
+    );
+  }
 
   return (
     <main>
@@ -42,6 +61,11 @@ const FriendRequest = () => {
         {FriendRequest && FriendRequest.length > 0 ? (
           <div>
             {FriendRequest.map((user) => {
+              const alreadyRequested =
+                Array.isArray(Friends) &&
+                Friends.some((req) => req.email === user.email);
+              console.log(user);
+
               return (
                 <div key={user._id} className="mt-3 flex gap-3">
                   <img
@@ -81,24 +105,26 @@ const FriendRequest = () => {
           </div>
         ) : (
           <div>
-            {FriendRequest && FriendRequest.length > 0 ? (
-              <div>no post now</div>
-            ) : (
-              <div>
-                {[...Array(2)].map((_, idx) => (
-                  <div key={idx} className="mt-3 flex gap-3 animate-pulse">
-                    <div className="w-[55px] h-[55px] rounded-md bg-gray-300" />
-                    <div className="flex flex-col justify-center gap-2">
-                      <div className="flex gap-2">
-                        <div className="h-4 w-20 bg-gray-300 rounded"></div>
-                        <div className="h-4 w-20 bg-gray-300 rounded"></div>
-                      </div>
-                      <div className="h-6 w-24 bg-gray-300 rounded"></div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            )}
+            <div className="flex flex-col items-center justify-center p-8  rounded-lg text-gray-500">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-16 w-16 mb-4 text-gray-400"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                strokeWidth={2}
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M8 10h.01M12 14h.01M16 10h.01M12 2a10 10 0 100 20 10 10 0 000-20z"
+                />
+              </svg>
+              <p className="text-lg font-semibold">No Friend Requests</p>
+              <p className="mt-2 text-sm text-gray-400">
+                You currently have no new friend requests.
+              </p>
+            </div>
           </div>
         )}
       </section>
@@ -113,39 +139,48 @@ const FriendRequest = () => {
               if (email === loginEmail) return null;
 
               // Skip rendering if the user already has a friend request
-              const alreadyRequested = FriendRequest.some(
-                (req) => req.email === email
-              );
-
-              // console.log(FriendRequest);
+              const alreadyRequested =
+                Array.isArray(Friends) &&
+                Friends.some((req) => req.email === user.email);
 
               return (
-                <div key={_id} className="mt-3 flex gap-3">
-                  <img
-                    src={
-                      profileImage
-                        ? profileImage
-                        : "logo/premium_photo-1673002094195-f18084be89ce.avif"
-                    }
-                    alt={firstName}
-                    className="w-[55px] h-[55px] rounded-md"
-                  />
-                  <div>
-                    <span className="flex items-center gap-2 capitalize">
-                      <h1>{firstName}</h1>
-                      <h1>{lastName}</h1>
-                    </span>
-                    <span className="flex items-center mt-1 capitalize">
-                      {!alreadyRequested && (
-                        <h3
-                          className="border px-2 rounded-md cursor-pointer"
-                          onClick={() => handleAddFriends(email)}
-                        >
-                          connect
-                        </h3>
-                      )}
-                    </span>
-                  </div>
+                <div>
+                  {!alreadyRequested && (
+                    <div key={_id} className="mt-3 flex gap-3">
+                      <img
+                        src={
+                          profileImage
+                            ? profileImage
+                            : "logo/premium_photo-1673002094195-f18084be89ce.avif"
+                        }
+                        alt={firstName}
+                        className="w-[55px] h-[55px] rounded-md"
+                      />
+                      <div>
+                        <span className="flex items-center gap-2 capitalize">
+                          <h1>{firstName}</h1>
+                          <h1>{lastName}</h1>
+                        </span>
+                        <span className="flex items-center mt-1 capitalize">
+                          {alreadyRequested ? (
+                            <h3
+                              className="border px-2 rounded-md cursor-pointer"
+                              // onClick={() => handleAddFriends(email)}
+                            >
+                              disconect
+                            </h3>
+                          ) : (
+                            <h3
+                              className="border px-2 rounded-md cursor-pointer"
+                              onClick={() => handleAddFriends(email)}
+                            >
+                              connect
+                            </h3>
+                          )}
+                        </span>
+                      </div>
+                    </div>
+                  )}
                 </div>
               );
             })}

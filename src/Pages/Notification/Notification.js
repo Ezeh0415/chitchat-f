@@ -8,15 +8,16 @@ import { useNavigate } from "react-router-dom";
 // Dummy data
 
 const NotificationPage = () => {
-  const { userProfile, handlePostDisplay } = useMyContext();
+  const { userProfile, handlePostDisplay, handleClearNotif } = useMyContext();
   const { mySuccess, user } = userProfile || {};
+
+  const { notifications, FriendRequestsNotifications } = user || {};
   const navigate = useNavigate();
 
-  console.log(user);
+  // console.log(user);
 
   const hasNotifications =
-    user?.notifications?.length > 0 ||
-    user?.FriendRequestsNotifications?.length > 0;
+    notifications?.length > 0 || FriendRequestsNotifications?.length > 0;
 
   return (
     <section>
@@ -32,9 +33,9 @@ const NotificationPage = () => {
             <div>
               <ul className="space-y-4">
                 {user &&
-                  [...user.notifications].reverse().map((notif) => (
+                  [...(notifications || [])].reverse().map((notif) => (
                     <li
-                      key={notif.id}
+                      key={notif.notif_id}
                       className={`flex items-center gap-4 p-4 rounded-lg border transition-shadow ${
                         notif.read
                           ? "bg-white border-gray-200"
@@ -112,17 +113,18 @@ const NotificationPage = () => {
               {/* friend request notification */}
               <ul className="space-y-4 mt-4">
                 {user &&
-                  [...user.FriendRequestsNotifications]
+                  [...(FriendRequestsNotifications || [])]
                     .reverse()
                     .map((notif) => (
                       <li
-                        key={notif.id}
+                        key={notif._id}
                         className={`flex items-center gap-4 p-4 rounded-lg border transition-shadow ${
                           notif.read
                             ? "bg-white border-gray-200"
                             : "bg-yellow-50 border-yellow-300 shadow-sm"
                         } hover:shadow-md`}
                         aria-live="polite"
+                        onClick={() => handleClearNotif(notif.email, notif._id)}
                       >
                         {/* Profile image */}
                         <img

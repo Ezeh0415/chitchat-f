@@ -98,7 +98,7 @@ function App() {
                 </ProtectedRoute>
               }
             />
-            {/* <Route
+            <Route
               path="/chatRoom"
               element={
                 <ProtectedRoute isAuthenticated={isAuthenticated}>
@@ -113,7 +113,7 @@ function App() {
                   <MessageFriends />
                 </ProtectedRoute>
               }
-            /> */}
+            />
             <Route
               path="/createPost"
               element={

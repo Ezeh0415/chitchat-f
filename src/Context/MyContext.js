@@ -33,6 +33,7 @@ export function MyContextProvider({ children }) {
   const [showPassword, setShowPassword] = React.useState(true);
   const [open, setOpen] = React.useState(false);
   const [modalOpen, setModalOpen] = React.useState(false);
+  const [postDisplay, setPostDisplay] = React.useState(null);
   const storedUser = localStorage.getItem("user");
   const user = JSON.parse(storedUser);
   const { email } = user || {};
@@ -261,7 +262,6 @@ export function MyContextProvider({ children }) {
   const handleLogin = async (e) => {
     e.preventDefault();
     const { email, password } = formData;
-    console.log(password);
     setLoading(true);
 
     if (!email || !password) {
@@ -710,9 +710,11 @@ export function MyContextProvider({ children }) {
   };
 
   const handlePostDisplay = async (email, postId, notif_id) => {
-    setLoading(true);
+    //
+    localStorage.setItem("postDisplayEmail", email);
+    localStorage.setItem("postDisplayPostId", postId);
+    localStorage.setItem("postDisplayNotif_id", notif_id);
     setError(false);
-    setSuccess(false);
     setMessage("");
 
     if (!email || !postId) {
@@ -737,9 +739,54 @@ export function MyContextProvider({ children }) {
         throw new Error(data?.message || "Failed to display post");
       }
 
+      // setSuccess(true);
+      // setMessage("Post displayed ");
+      setPostDisplay(data);
+      setLoading(false);
+      setTimeout(() => {
+        setSuccess(false);
+        setMessage("");
+      }, 2000);
+    } catch (error) {
+      // setError(true);
+      // setMessage(error.message || "Error displaying post");
+    } finally {
+      setMediaUrl("");
+      setTimeout(() => {
+        setError(false);
+      }, 3000);
+    }
+  };
+  const handleClearNotif = async (email, notif_id) => {
+    setLoading(true);
+    setError(false);
+    setSuccess(false);
+    setMessage("");
+
+    if (!email) {
+      setError(true);
+      setMessage("Poster or liker email missing.");
+      setLoading(false);
+      return;
+    }
+
+    try {
+      const response = await fetch(`${Base_Url}/api/clearNotifications`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, notif_id }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data?.message || "Failed to update notification");
+      }
+
       setSuccess(true);
-      setMessage("Post displayed ");
-      localStorage.setItem("postDisplay", JSON.stringify(data));
+      setMessage("notif updated ");
       setLoading(false);
       setTimeout(() => {
         setSuccess(false);
@@ -747,7 +794,7 @@ export function MyContextProvider({ children }) {
       }, 2000);
     } catch (error) {
       setError(true);
-      setMessage(error.message || "Error displaying post");
+      setMessage(error.message || "Error updating notification");
     } finally {
       setMediaUrl("");
       setTimeout(() => {
@@ -764,8 +811,6 @@ export function MyContextProvider({ children }) {
     setError(false);
     setSuccess(false);
     setMessage("");
-
-    console.log(PostEmail, postId, commentedUser, commentText);
 
     if (!PostEmail || !postId || !commentedUser || !commentText) {
       setError(true);
@@ -853,7 +898,7 @@ export function MyContextProvider({ children }) {
       }, 3000);
     }
   };
-  const handleAcceptFriends = async (ReciverEmail, requestId) => {
+  const handleAcceptFriends = async (requestId, ReciverEmail) => {
     setError(false);
     setSuccess(false);
     setMessage("");
@@ -864,8 +909,6 @@ export function MyContextProvider({ children }) {
       setLoading(false);
       return;
     }
-
-    console.log(email, ReciverEmail, requestId);
 
     try {
       const response = await fetch(
@@ -964,6 +1007,7 @@ export function MyContextProvider({ children }) {
 
     const fetchData = async () => {
       const results = await fetchMultipleRequests(requests);
+
       setResult(results);
       setHideNav(true);
     };
@@ -1036,12 +1080,14 @@ export function MyContextProvider({ children }) {
         handleProfileSubmit,
         handleGetUsersProfile,
         handlePostDisplay,
+        handleClearNotif,
         // profile image upload section end
 
         // create post section start
         Discard,
         handlePostChange,
         handlePostSubmit,
+        postDisplay,
         // liked post section
         handleLikedPosts,
         handleUnLikePosts,
