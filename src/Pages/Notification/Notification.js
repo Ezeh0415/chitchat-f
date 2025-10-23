@@ -124,7 +124,7 @@ const NotificationPage = () => {
                             : "bg-yellow-50 border-yellow-300 shadow-sm"
                         } hover:shadow-md`}
                         aria-live="polite"
-                        onClick={() => handleClearNotif(notif.email, notif._id)}
+                        onClick={() => handleClearNotif(notif._id)}
                       >
                         {/* Profile image */}
                         <img

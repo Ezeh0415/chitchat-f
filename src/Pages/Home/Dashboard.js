@@ -130,7 +130,6 @@ const Dashboard = () => {
                 Array.isArray(Friends) &&
                 Friends.some((req) => req.email === posts.email);
 
-              console.log(alreadyRequested);
               return (
                 <main key={posts._id}>
                   <div
@@ -206,9 +205,28 @@ const Dashboard = () => {
                     ) : (
                       <div>
                         {alreadyRequested ? (
-                          <h2 className="border rounded-lg bg-yellow-800 hover:bg-yellow-600 capitalize text-white py-1 px-2 text-sm ">
-                            view user
-                          </h2>
+                          <div>
+                            {posts.email === user.email ? (
+                              <Link
+                                to={`/profile`}
+                                className="border rounded-lg bg-yellow-800 hover:bg-yellow-600 capitalize text-white py-1 px-2 text-sm "
+                              >
+                                view user
+                              </Link>
+                            ) : (
+                              <h2
+                                className="border rounded-lg bg-yellow-800 hover:bg-yellow-600 capitalize text-white py-1 px-2 text-sm "
+                                onClick={() => {
+                                  handleGetUsersProfile(posterEmail);
+                                  setTimeout(() => {
+                                    navigate("/UserProfile");
+                                  }, 1500);
+                                }}
+                              >
+                                view user
+                              </h2>
+                            )}
+                          </div>
                         ) : (
                           <h2 className="border rounded-lg bg-yellow-800 hover:bg-yellow-600 capitalize text-white py-1 px-2 text-sm ">
                             connect

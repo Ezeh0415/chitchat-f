@@ -1,22 +1,28 @@
 import React from "react";
 import Navbar from "../Nav/Navbar";
 import { useMyContext } from "../../Context/MyContext";
-import Model from "../../utilites/Model";
 import { formatDistanceToNowStrict } from "date-fns";
 import LogoutModel from "../../utilites/LogoutModel";
 import Success from "../../utilites/Success";
 import Error from "../../utilites/Error";
 
 const UserProfile = () => {
+  const { userProfile, handleUnFriend } = useMyContext();
   const storedUser = localStorage.getItem("UsersProfile");
   const users = JSON.parse(storedUser);
 
   const { mysuccess, user } = users || {};
+  const { mySuccess, user: myUser } = userProfile || {};
 
   // console.log("User Profile in ProfilePage:", user);
 
   const postCount = user && user.posts ? user.posts.length : 0;
 
+  const isFriends = Array.isArray(myUser?.Friends)
+    ? myUser.Friends.find((friend) => friend.email === user.email)
+    : null;
+
+  const friendId = isFriends?._id; // or matchedFriend.id, depending on your schema
   return (
     <main className="relative">
       {/* logout model */}
@@ -67,6 +73,18 @@ const UserProfile = () => {
                 <button className="bg-gray-200 text-gray-800 px-4 py-2 rounded hover:bg-gray-300 transition">
                   Message
                 </button>
+                {isFriends ? (
+                  <button
+                    className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition"
+                    onClick={() => handleUnFriend(friendId, user.email)}
+                  >
+                    Unfriend
+                  </button>
+                ) : (
+                  <button className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition">
+                    connect
+                  </button>
+                )}
               </div>
             </div>
           </div>

@@ -757,7 +757,7 @@ export function MyContextProvider({ children }) {
       }, 3000);
     }
   };
-  const handleClearNotif = async (email, notif_id) => {
+  const handleClearNotif = async (notif_id) => {
     setLoading(true);
     setError(false);
     setSuccess(false);
@@ -948,6 +948,51 @@ export function MyContextProvider({ children }) {
     }
   };
 
+  const handleUnFriend = async (friendId, ReciverEmail) => {
+    setError(false);
+    setSuccess(false);
+    setMessage("");
+
+    if (!email || !ReciverEmail || !friendId) {
+      setError(true);
+      setMessage("empty input please try again.");
+      setLoading(false);
+      return;
+    }
+
+    try {
+      const response = await fetch(`${Base_Url}/api/unfriend/${friendId}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ userEmail: email, ReciverEmail }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data?.message || "Failed to unFriend request to user ");
+      }
+
+      setSuccess(true);
+      setMessage("unFriend request accepted");
+      setLoading(false);
+      setTimeout(() => {
+        setSuccess(false);
+        setMessage("");
+      }, 2000);
+    } catch (error) {
+      setError(true);
+      setMessage(error.message || "Error accepting unfriend request to user");
+    } finally {
+      setMessage("");
+      setTimeout(() => {
+        setError(false);
+      }, 3000);
+    }
+  };
+
   const handleDeleteFriendRequests = async (requestId) => {
     setError(false);
     setSuccess(false);
@@ -1100,6 +1145,7 @@ export function MyContextProvider({ children }) {
         // Add friends section
         handleAddFriends,
         handleAcceptFriends,
+        handleUnFriend,
         handleDeleteFriendRequests,
       }}
     >
