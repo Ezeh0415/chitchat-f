@@ -1,7 +1,10 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useMyContext } from "../../Context/MyContext";
 
 const MessagePage = () => {
+  const { isOnline, chatUser } = useMyContext();
+  const { data } = chatUser || {};
   const [messages, setMessages] = useState([
     { id: 1, text: "Hey there!", email: "emmanuel@gmail.com" },
     { id: 2, text: "Hello! How are you?", email: "chigozie@gmail.com" },
@@ -11,6 +14,7 @@ const MessagePage = () => {
       email: "emmanuel@gmail.com",
     },
   ]);
+  const bottomRef = React.useRef(null);
 
   const [input, setInput] = useState("");
   const navigate = useNavigate();
@@ -24,6 +28,11 @@ const MessagePage = () => {
     ]);
     setInput("");
   };
+  const fullName = `${data?.firstName ?? ""} ${data?.lastName ?? ""}`.trim();
+
+  React.useEffect(() => {
+    bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
 
   return (
     <div className="flex flex-col h-[89vh] bg-yellow-50">
@@ -47,32 +56,62 @@ const MessagePage = () => {
 
         <header className="bg-white px-4 py-3 border-b shadow-sm flex items-center w-[100%]">
           <img
-            src="logo/premium_photo-1673002094195-f18084be89ce.avif"
-            alt="User"
+            src={
+              data.profileImage
+                ? data.profileImage
+                : "logo/premium_photo-1673002094195-f18084be89ce.avif"
+            }
+            alt={data.firstName}
             className="w-10 h-10 rounded-full mr-3"
           />
           <div>
-            <h2 className="text-yellow-900 font-semibold">Sarah Parker</h2>
-            <p className="text-xs text-green-700">Online</p>
+            <h2 className="text-yellow-900 font-semibold">
+              {fullName ? fullName : "Sarah Parker"}
+            </h2>
+            <p className="text-xs text-green-700">
+              {isOnline ? "🟢 Online" : "🔴 Offline"}
+            </p>
           </div>
         </header>
       </div>
 
       {/* Chat messages */}
-      <main className="flex-1 overflow-y-auto px-4 py-6 space-y-4">
-        {messages.map((msg) => (
-          <div
-            key={msg.id}
-            className={`max-w-xs md:max-w-md lg:max-w-lg px-4 py-2 rounded-lg text-sm ${
-              msg.email === "emmanuel@gmail.com"
-                ? "ml-auto bg-yellow-900 text-white w-[60%] "
-                : "mr-auto bg-yellow-100 text-black w-[60%]"
-            }`}
-          >
-            {msg.text}
+
+      <div className="flex flex-col h-[75vh] p-4 overflow-y-auto space-y-3 bg-yellow-50">
+        {messages.length === 0 ? (
+          <div className="flex flex-1 items-center justify-center text-gray-400 italic animate-pulse">
+            No messages yet — start chatting 💬
           </div>
-        ))}
-      </main>
+        ) : (
+          messages.map((msg) => {
+            const isOwn = msg.email === data.email;
+
+            return (
+              <div
+                key={msg.id}
+                className={`flex flex-col ${
+                  isOwn ? "items-end" : "items-start"
+                }`}
+              >
+                <div
+                  className={`px-4 py-2 rounded-2xl text-sm shadow-sm w-fit max-w-[70%] ${
+                    isOwn
+                      ? "bg-yellow-900 text-white rounded-br-none"
+                      : "bg-yellow-200 text-gray-900 rounded-bl-none"
+                  }`}
+                >
+                  {msg.text}
+                </div>
+
+                <span className="text-[11px] text-gray-500 mt-1">
+                  {isOwn ? "You" : msg.name || msg.email.split("@")[0]}
+                </span>
+              </div>
+            );
+          })
+        )}
+        <div ref={bottomRef} />
+      </div>
 
       {/* Input area */}
       <footer className="bg-white border-t px-4 py-3">

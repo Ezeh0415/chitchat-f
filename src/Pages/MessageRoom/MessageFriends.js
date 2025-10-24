@@ -5,7 +5,7 @@ import { useMyContext } from "../../Context/MyContext";
 import LogoutModel from "../../utilites/LogoutModel";
 
 const MessageFriends = () => {
-  const { userProfile, loading, error } = useMyContext();
+  const { userProfile, loading, error, handleChatRoom } = useMyContext();
   const { mySuccess, user } = userProfile || {};
 
   if (loading) {
@@ -49,31 +49,32 @@ const MessageFriends = () => {
         <h1 className="text-xl capitalize mt-4">chats</h1>
 
         {user.Friends.map((friend) => (
-          <section key={friend._id || friend.email /* unique key here */}>
-            <Link to="/chatRoom" className="flex items-center gap-3">
-              <div className="mt-3 flex items-center gap-3">
-                <img
-                  src={
-                    friend.profileImage
-                      ? friend.profileImage
-                      : "logo/premium_photo-1673002094195-f18084be89ce.avif"
-                  }
-                  alt={friend.firstName}
-                  className="w-[55px] h-[55px] rounded-md"
-                />
-                <div>
-                  <span className="flex items-center gap-2 capitalize">
-                    <h1>{friend.firstName}</h1>
-                    <h1>{friend.lastName}</h1>
-                  </span>
-                  <span className="mt-1 capitalize">
-                    <h3 className="text-sm rounded-md">
-                      Doing great, thanks for asking!
-                    </h3>
-                  </span>
-                </div>
+          <section
+            key={friend._id || friend.email}
+            onClick={() => handleChatRoom(friend.email, friend._id)}
+          >
+            <div className="mt-3 flex items-center gap-3">
+              <img
+                src={
+                  friend.profileImage
+                    ? friend.profileImage
+                    : "logo/premium_photo-1673002094195-f18084be89ce.avif"
+                }
+                alt={friend.firstName}
+                className="w-[55px] h-[55px] rounded-md"
+              />
+              <div>
+                <span className="flex items-center gap-2 capitalize">
+                  <h1>{friend.firstName}</h1>
+                  <h1>{friend.lastName}</h1>
+                </span>
+                <span className="mt-1 capitalize">
+                  <h3 className="text-sm rounded-md">
+                    Doing great, thanks for asking!
+                  </h3>
+                </span>
               </div>
-            </Link>
+            </div>
           </section>
         ))}
       </div>

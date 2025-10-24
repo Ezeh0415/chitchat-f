@@ -16,6 +16,7 @@ const Dashboard = () => {
     handleLikedPosts,
     handleUnLikePosts,
     handleGetUsersProfile,
+    handleAddFriends,
     handlePostDisplay,
   } = useMyContext();
   const navigate = useNavigate();
@@ -126,9 +127,11 @@ const Dashboard = () => {
               const userHasLiked = posts.liked?.some(
                 (like) => like.likedByEmail === user.email
               );
-              const alreadyRequested =
+              const alreadyFriends =
                 Array.isArray(Friends) &&
                 Friends.some((req) => req.email === posts.email);
+
+              
 
               return (
                 <main key={posts._id}>
@@ -204,7 +207,7 @@ const Dashboard = () => {
                       <div></div>
                     ) : (
                       <div>
-                        {alreadyRequested ? (
+                        {alreadyFriends ? (
                           <div>
                             {posts.email === user.email ? (
                               <Link
@@ -228,7 +231,11 @@ const Dashboard = () => {
                             )}
                           </div>
                         ) : (
-                          <h2 className="border rounded-lg bg-yellow-800 hover:bg-yellow-600 capitalize text-white py-1 px-2 text-sm ">
+                          
+                          <h2
+                            className="border rounded-lg bg-yellow-800 hover:bg-yellow-600 capitalize text-white py-1 px-2 text-sm "
+                            onClick={() => handleAddFriends(posts.email)}
+                          >
                             connect
                           </h2>
                         )}

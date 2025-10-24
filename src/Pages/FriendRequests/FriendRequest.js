@@ -64,7 +64,6 @@ const FriendRequest = () => {
               const alreadyRequested =
                 Array.isArray(Friends) &&
                 Friends.some((req) => req.email === user.email);
-              console.log(user);
 
               return (
                 <div key={user._id} className="mt-3 flex gap-3">

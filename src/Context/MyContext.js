@@ -34,6 +34,8 @@ export function MyContextProvider({ children }) {
   const [open, setOpen] = React.useState(false);
   const [modalOpen, setModalOpen] = React.useState(false);
   const [postDisplay, setPostDisplay] = React.useState(null);
+  const [isOnline, setIsOnline] = React.useState(navigator.onLine);
+  const [chatUser, setChatUser] = React.useState(null);
   const storedUser = localStorage.getItem("user");
   const user = JSON.parse(storedUser);
   const { email } = user || {};
@@ -1043,6 +1045,67 @@ export function MyContextProvider({ children }) {
     }
   };
 
+  const handleChatRoom = async (chatEmail, requestId) => {
+    setError(false);
+    setSuccess(false);
+    setMessage("");
+
+    if (!email || !chatEmail || !requestId) {
+      setError(true);
+      setMessage("empty input please try again.");
+      setLoading(false);
+      return;
+    }
+
+    try {
+      const response = await fetch(`${Base_Url}/api/chatUser/${requestId}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ userEmail: email, chatEmail }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data?.message || "Failed to get user chat room ");
+      }
+
+      setSuccess(true);
+      setMessage("chat room accessed");
+      setLoading(false);
+      setChatUser(data);
+      setTimeout(() => {
+        setSuccess(false);
+        navigate("/chatroom");
+        setMessage("");
+      }, 2000);
+    } catch (error) {
+      setError(true);
+      setMessage(error.message || "Failed to get user chat room");
+    } finally {
+      setMessage("");
+      setTimeout(() => {
+        setError(false);
+      }, 3000);
+    }
+  };
+
+  // check if user is online
+  React.useEffect(() => {
+    const handleOnline = () => setIsOnline(true);
+    const handleOffline = () => setIsOnline(false);
+
+    window.addEventListener("online", handleOnline);
+    window.addEventListener("offline", handleOffline);
+
+    return () => {
+      window.removeEventListener("online", handleOnline);
+      window.removeEventListener("offline", handleOffline);
+    };
+  }, [navigator.onLine]);
+
   // function to handle multiple requests
   const [userProfile, posts, Users] = result || [];
 
@@ -1147,6 +1210,11 @@ export function MyContextProvider({ children }) {
         handleAcceptFriends,
         handleUnFriend,
         handleDeleteFriendRequests,
+
+        // chat room section
+        isOnline,
+        handleChatRoom,
+        chatUser,
       }}
     >
       {children}
