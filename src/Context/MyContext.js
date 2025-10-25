@@ -28,6 +28,7 @@ export function MyContextProvider({ children }) {
   const [hasSubmitted, setHasSubmitted] = React.useState(false);
   const [postMessage, setPostMessage] = React.useState("");
   const [commentText, setComment] = React.useState("");
+  const [ChatInput, setChatInput] = React.useState("");
   const [result, setResult] = React.useState();
   const [hideNav, setHideNav] = React.useState(false);
   const [showPassword, setShowPassword] = React.useState(true);
@@ -35,7 +36,6 @@ export function MyContextProvider({ children }) {
   const [modalOpen, setModalOpen] = React.useState(false);
   const [postDisplay, setPostDisplay] = React.useState(null);
   const [isOnline, setIsOnline] = React.useState(navigator.onLine);
-  const [chatUser, setChatUser] = React.useState(null);
   const storedUser = localStorage.getItem("user");
   const user = JSON.parse(storedUser);
   const { email } = user || {};
@@ -1046,6 +1046,8 @@ export function MyContextProvider({ children }) {
   };
 
   const handleChatRoom = async (chatEmail, requestId) => {
+    localStorage.removeItem("chatUser");
+
     setError(false);
     setSuccess(false);
     setMessage("");
@@ -1075,7 +1077,7 @@ export function MyContextProvider({ children }) {
       setSuccess(true);
       setMessage("chat room accessed");
       setLoading(false);
-      setChatUser(data);
+      localStorage.setItem("chatUser", JSON.stringify(data));
       setTimeout(() => {
         setSuccess(false);
         navigate("/chatroom");
@@ -1090,6 +1092,61 @@ export function MyContextProvider({ children }) {
         setError(false);
       }, 3000);
     }
+  };
+
+  const handleChatInput = async (e) => {
+    e.preventDefault();
+    setChatInput(e.target.value);
+  };
+
+  const handleChat = async (chatEmail, requestId, ChatInput) => {
+    setError(false);
+    setSuccess(false);
+    setMessage("");
+
+    if (!email || !chatEmail || !requestId || !ChatInput) {
+      setError(true);
+      setMessage("empty input please try again.");
+      setLoading(false);
+      return;
+    }
+
+    if (ChatInput.trim() === "") return;
+
+    console.log(email, chatEmail, requestId, ChatInput);
+
+    // try {
+    //   const response = await fetch(`${Base_Url}/api/chatUser/${requestId}`, {
+    //     method: "POST",
+    //     headers: {
+    //       "Content-Type": "application/json",
+    //     },
+    //     body: JSON.stringify({ userEmail: email, chatEmail }),
+    //   });
+
+    //   const data = await response.json();
+
+    //   if (!response.ok) {
+    //     throw new Error(data?.message || "Failed to get user chat room ");
+    //   }
+
+    //   setSuccess(true);
+    //   setMessage("chat room accessed");
+    //   setLoading(false);
+    //   setTimeout(() => {
+    //     setSuccess(false);
+    //     navigate("/chatroom");
+    //     setMessage("");
+    //   }, 2000);
+    // } catch (error) {
+    //   setError(true);
+    //   setMessage(error.message || "Failed to get user chat room");
+    // } finally {
+    //   setMessage("");
+    //   setTimeout(() => {
+    //     setError(false);
+    //   }, 3000);
+    // }
   };
 
   // check if user is online
@@ -1214,7 +1271,9 @@ export function MyContextProvider({ children }) {
         // chat room section
         isOnline,
         handleChatRoom,
-        chatUser,
+        handleChat,
+        ChatInput,
+        handleChatInput,
       }}
     >
       {children}

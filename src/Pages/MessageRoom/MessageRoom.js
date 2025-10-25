@@ -3,31 +3,28 @@ import { useNavigate } from "react-router-dom";
 import { useMyContext } from "../../Context/MyContext";
 
 const MessagePage = () => {
-  const { isOnline, chatUser } = useMyContext();
+  const { isOnline, handleChat, ChatInput, handleChatInput } = useMyContext();
+  const chatUser = JSON.parse(localStorage.getItem("chatUser"));
   const { data } = chatUser || {};
-  const [messages, setMessages] = useState([
-    { id: 1, text: "Hey there!", email: "emmanuel@gmail.com" },
-    { id: 2, text: "Hello! How are you?", email: "chigozie@gmail.com" },
-    {
-      id: 3,
-      text: "Doing great, thanks for asking!",
-      email: "emmanuel@gmail.com",
-    },
-  ]);
+
+  const storedUser = localStorage.getItem("user");
+  const user = JSON.parse(storedUser);
+  const { email } = user || {};
+
+  const [messages, setMessages] = useState([]);
   const bottomRef = React.useRef(null);
 
-  const [input, setInput] = useState("");
   const navigate = useNavigate();
 
-  const sendMessage = () => {
-    if (input.trim() === "") return;
+  // const sendMessage = () => {
+  //   if (input.trim() === "") return;
 
-    setMessages([
-      ...messages,
-      { id: Date.now(), text: input, email: "emmanuel@gmail.com" },
-    ]);
-    setInput("");
-  };
+  //   setMessages([
+  //     ...messages,
+  //     { id: Date.now(), text: input, email: "chigozie@gmail.com" },
+  //   ]);
+  //   setInput("");
+  // };
   const fullName = `${data?.firstName ?? ""} ${data?.lastName ?? ""}`.trim();
 
   React.useEffect(() => {
@@ -84,20 +81,21 @@ const MessagePage = () => {
           </div>
         ) : (
           messages.map((msg) => {
-            const isOwn = msg.email === data.email;
+            const isOwn =
+              msg.email.trim().toLowerCase() === email.trim().toLowerCase();
 
             return (
               <div
                 key={msg.id}
                 className={`flex flex-col ${
-                  isOwn ? "items-end" : "items-start"
+                  isOwn ? "items-start" : "items-end"
                 }`}
               >
                 <div
-                  className={`px-4 py-2 rounded-2xl text-sm shadow-sm w-fit max-w-[70%] ${
+                  className={`break-words px-3 py-2 rounded-lg max-w-[70%] ${
                     isOwn
-                      ? "bg-yellow-900 text-white rounded-br-none"
-                      : "bg-yellow-200 text-gray-900 rounded-bl-none"
+                      ? "bg-yellow-200 border border-yellow-600 text-gray-800" // your messages (left)
+                      : "bg-white border border-gray-300 text-gray-800" // others' messages (right)
                   }`}
                 >
                   {msg.text}
@@ -119,12 +117,12 @@ const MessagePage = () => {
           <input
             type="text"
             placeholder="Type a message..."
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
+            value={ChatInput}
+            onChange={handleChatInput}
             className="flex-1 border border-gray-300 rounded-full px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-yellow-600"
           />
           <button
-            onClick={sendMessage}
+            onClick={() => handleChat(data?.email, data?._id, ChatInput)}
             className="bg-yellow-700 hover:bg-yellow-600 text-white px-4 py-2 rounded-full text-sm"
           >
             Send
