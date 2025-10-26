@@ -21,6 +21,7 @@ const ProfilePage = () => {
 
   const { mysuccess, user } = userProfile || {};
 
+
   const location = useLocation();
   const isEditing = location.pathname.includes("editProfile");
   const navigate = useNavigate();

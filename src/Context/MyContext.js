@@ -12,7 +12,7 @@ import {
 } from "@headlessui/react";
 import { ExclamationTriangleIcon } from "@heroicons/react/24/outline";
 import { io } from "socket.io-client";
-const socket = io("http://localhost:8080"); // replace with your server URL
+const socket = io(`${Base_Url}`); // replace with your server URL
 // 1. Create the context
 const MyContext = createContext();
 
@@ -36,10 +36,16 @@ export function MyContextProvider({ children }) {
   const [modalOpen, setModalOpen] = React.useState(false);
   const [postDisplay, setPostDisplay] = React.useState(null);
   const [isOnline, setIsOnline] = React.useState(navigator.onLine);
+  const [messages, setMessages] = React.useState(null);
+  const [Chat, setChat] = React.useState([]);
+  const [refreshChat, setRefreshChat] = React.useState(false);
   const storedUser = localStorage.getItem("user");
-  const user = JSON.parse(storedUser);
-  const { email } = user || {};
+  const users = JSON.parse(storedUser);
+  const { email } = users || {};
   let commentedUser = email;
+  // function to handle multiple requests
+  const [userProfile, posts, Users] = result || [];
+
   // check if user is authenticated
   const isAuthenticated = !!localStorage.getItem("Token");
 
@@ -67,6 +73,7 @@ export function MyContextProvider({ children }) {
         },
       },
     },
+
     {
       url: `${Base_Url}/api/posts`,
       options: {
@@ -1080,6 +1087,7 @@ export function MyContextProvider({ children }) {
       localStorage.setItem("chatUser", JSON.stringify(data));
       setTimeout(() => {
         setSuccess(false);
+
         navigate("/chatroom");
         setMessage("");
       }, 2000);
@@ -1113,40 +1121,106 @@ export function MyContextProvider({ children }) {
 
     if (ChatInput.trim() === "") return;
 
-    console.log(email, chatEmail, requestId, ChatInput);
+    socket.on("chatMessage", (msg) => {
+      setMessages(msg);
+      
+    });
 
-    // try {
-    //   const response = await fetch(`${Base_Url}/api/chatUser/${requestId}`, {
-    //     method: "POST",
-    //     headers: {
-    //       "Content-Type": "application/json",
-    //     },
-    //     body: JSON.stringify({ userEmail: email, chatEmail }),
-    //   });
+    try {
+      const response = await fetch(`${Base_Url}/api/chat/${requestId}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          userEmail: email,
+          chatEmail,
+          message: ChatInput,
+        }),
+      });
 
-    //   const data = await response.json();
+      const data = await response.json();
 
-    //   if (!response.ok) {
-    //     throw new Error(data?.message || "Failed to get user chat room ");
-    //   }
+      if (!response.ok) {
+        throw new Error(data?.message || "Failed to get user chat room ");
+      }
 
-    //   setSuccess(true);
-    //   setMessage("chat room accessed");
-    //   setLoading(false);
-    //   setTimeout(() => {
-    //     setSuccess(false);
-    //     navigate("/chatroom");
-    //     setMessage("");
-    //   }, 2000);
-    // } catch (error) {
-    //   setError(true);
-    //   setMessage(error.message || "Failed to get user chat room");
-    // } finally {
-    //   setMessage("");
-    //   setTimeout(() => {
-    //     setError(false);
-    //   }, 3000);
-    // }
+      setSuccess(true);
+      setMessage("chat room accessed");
+      setChatInput("");
+      setLoading(false);
+
+      setTimeout(() => {
+        setSuccess(false);
+        // Then whenever chat should refresh:
+        setRefreshChat((prev) => !prev);
+        setChatInput("");
+        setMessage("");
+      }, 2000);
+    } catch (error) {
+      setChatInput("");
+      setError(true);
+      setMessage(error.message || "Failed to get user chat room");
+    } finally {
+      setMessage("");
+      setChatInput("");
+      setTimeout(() => {
+        setError(false);
+      }, 3000);
+    }
+  };
+  const handleGetChat = async (requestId) => {
+    setError(false);
+    setSuccess(false);
+    setMessage("");
+
+    if (!email || !requestId) {
+      setError(true);
+      setMessage("empty input please try again.");
+      setLoading(false);
+      return;
+    }
+
+    try {
+      const response = await fetch(`${Base_Url}/api/getChatMessages`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          userEmail: email,
+          friendId: requestId,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data?.message || "Failed to send chat ");
+      }
+
+      setSuccess(true);
+      setMessage("chat sent ");
+      setChatInput("");
+      setLoading(false);
+      setChat(data);
+      setTimeout(() => {
+        setSuccess(false);
+
+        setChatInput("");
+        setMessage("");
+      }, 2000);
+    } catch (error) {
+      setChatInput("");
+      setError(true);
+      setMessage(error.message || "Failed to send chat");
+    } finally {
+      setMessage("");
+      setChatInput("");
+      setTimeout(() => {
+        setError(false);
+      }, 3000);
+    }
   };
 
   // check if user is online
@@ -1162,9 +1236,6 @@ export function MyContextProvider({ children }) {
       window.removeEventListener("offline", handleOffline);
     };
   }, [navigator.onLine]);
-
-  // function to handle multiple requests
-  const [userProfile, posts, Users] = result || [];
 
   // Fetch data when email becomes available
   React.useEffect(() => {
@@ -1274,6 +1345,11 @@ export function MyContextProvider({ children }) {
         handleChat,
         ChatInput,
         handleChatInput,
+        socket,
+        messages,
+        Chat,
+        handleGetChat,
+        refreshChat,
       }}
     >
       {children}

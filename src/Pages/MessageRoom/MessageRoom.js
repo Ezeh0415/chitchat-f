@@ -3,28 +3,41 @@ import { useNavigate } from "react-router-dom";
 import { useMyContext } from "../../Context/MyContext";
 
 const MessagePage = () => {
-  const { isOnline, handleChat, ChatInput, handleChatInput } = useMyContext();
+  const {
+    isOnline,
+    handleChat,
+    ChatInput,
+    handleChatInput,
+    socket,
+    messages,
+    handleGetChat,
+    Chat,
+    refreshChat,
+  } = useMyContext();
+  const bottomRef = React.useRef(null);
   const chatUser = JSON.parse(localStorage.getItem("chatUser"));
   const { data } = chatUser || {};
 
   const storedUser = localStorage.getItem("user");
-  const user = JSON.parse(storedUser);
-  const { email } = user || {};
+  const users = JSON.parse(storedUser);
+  const { email } = users || {};
 
-  const [messages, setMessages] = useState([]);
-  const bottomRef = React.useRef(null);
+  React.useEffect(() => {
+    if (data?._id) {
+      handleGetChat(data._id);
+      setTimeout(() => {
+        bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+      }, 500);
+    }
+  }, [data?._id, refreshChat]);
+
+  const handleRerunPostDisplay = () => {
+    handleChat(data?.email, data?._id, ChatInput);
+    handleGetChat(data?._id);
+  };
 
   const navigate = useNavigate();
 
-  // const sendMessage = () => {
-  //   if (input.trim() === "") return;
-
-  //   setMessages([
-  //     ...messages,
-  //     { id: Date.now(), text: input, email: "chigozie@gmail.com" },
-  //   ]);
-  //   setInput("");
-  // };
   const fullName = `${data?.firstName ?? ""} ${data?.lastName ?? ""}`.trim();
 
   React.useEffect(() => {
@@ -42,7 +55,9 @@ const MessagePage = () => {
           stroke-width="1.5"
           stroke="currentColor"
           class="size-6 mb-1"
-          onClick={() => navigate(-1)}
+          onClick={() => {
+            navigate(-1);
+          }}
         >
           <path
             stroke-linecap="round"
@@ -54,11 +69,11 @@ const MessagePage = () => {
         <header className="bg-white px-4 py-3 border-b shadow-sm flex items-center w-[100%]">
           <img
             src={
-              data.profileImage
-                ? data.profileImage
+              data?.profileImage
+                ? data?.profileImage
                 : "logo/premium_photo-1673002094195-f18084be89ce.avif"
             }
-            alt={data.firstName}
+            alt={data?.firstName}
             className="w-10 h-10 rounded-full mr-3"
           />
           <div>
@@ -75,40 +90,76 @@ const MessagePage = () => {
       {/* Chat messages */}
 
       <div className="flex flex-col h-[75vh] p-4 overflow-y-auto space-y-3 bg-yellow-50">
-        {messages.length === 0 ? (
+        {Chat?.length === 0 ? (
           <div className="flex flex-1 items-center justify-center text-gray-400 italic animate-pulse">
             No messages yet — start chatting 💬
           </div>
         ) : (
-          messages.map((msg) => {
-            const isOwn =
-              msg.email.trim().toLowerCase() === email.trim().toLowerCase();
+          <div>
+            {Array.isArray(Chat) &&
+              Chat.map((msg) => {
+                const isOwn =
+                  msg.to.trim().toLowerCase() === email.trim().toLowerCase();
 
-            return (
-              <div
-                key={msg.id}
-                className={`flex flex-col ${
-                  isOwn ? "items-start" : "items-end"
-                }`}
-              >
+                return (
+                  <div
+                    key={msg._id}
+                    className={`flex flex-col py-2 ${
+                      isOwn ? "items-end" : "items-start"
+                    }`}
+                  >
+                    <div
+                      className={`break-words px-3 py-2 rounded-lg max-w-[70%] ${
+                        isOwn
+                          ? "bg-yellow-200 border border-yellow-600 text-gray-800" // your messages (left)
+                          : "bg-white border border-gray-300 text-gray-800" // others' messages (right)
+                      }`}
+                    >
+                      <span className="flex flex-col gap-1 ">
+                        {msg.message}
+                        <p className="break-words text-xs text-gray-500  ">
+                          {new Date(msg.timestamp).toLocaleTimeString([], {
+                            hour: "2-digit",
+                            minute: "2-digit",
+                          })}
+                        </p>
+                      </span>
+                    </div>
+                  </div>
+                );
+              })}
+            {Array.isArray(messages) &&
+              messages.map((message) => (
                 <div
-                  className={`break-words px-3 py-2 rounded-lg max-w-[70%] ${
-                    isOwn
-                      ? "bg-yellow-200 border border-yellow-600 text-gray-800" // your messages (left)
-                      : "bg-white border border-gray-300 text-gray-800" // others' messages (right)
+                  key={message._id}
+                  className={`flex flex-col mb-2 ${
+                    message.from.trim().toLowerCase() ===
+                    email.trim().toLowerCase()
+                      ? "items-end"
+                      : "items-start"
                   }`}
                 >
-                  {msg.text}
+                  <div
+                    className={`break-words px-3 py-2 rounded-lg max-w-[70%] ${
+                      message.from.trim().toLowerCase() ===
+                      email.trim().toLowerCase()
+                        ? "bg-yellow-200 border border-yellow-600 text-gray-800"
+                        : "bg-white border border-gray-300 text-gray-800"
+                    }`}
+                  >
+                    <span>
+                      {message.message}
+                      {new Date(message.timestamp).toLocaleTimeString([], {
+                        hour: "2-digit",
+                        minute: "2-digit",
+                      })}
+                    </span>
+                  </div>
                 </div>
-
-                <span className="text-[11px] text-gray-500 mt-1">
-                  {isOwn ? "You" : msg.name || msg.email.split("@")[0]}
-                </span>
-              </div>
-            );
-          })
+              ))}
+            <div ref={bottomRef} />
+          </div>
         )}
-        <div ref={bottomRef} />
       </div>
 
       {/* Input area */}
@@ -121,8 +172,9 @@ const MessagePage = () => {
             onChange={handleChatInput}
             className="flex-1 border border-gray-300 rounded-full px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-yellow-600"
           />
+
           <button
-            onClick={() => handleChat(data?.email, data?._id, ChatInput)}
+            onClick={handleRerunPostDisplay}
             className="bg-yellow-700 hover:bg-yellow-600 text-white px-4 py-2 rounded-full text-sm"
           >
             Send
