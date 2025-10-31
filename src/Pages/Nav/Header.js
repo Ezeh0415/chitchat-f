@@ -23,7 +23,7 @@ const Header = () => {
   return (
     <div>
       <header className="flex items-center justify-between">
-        <Link to="/" className="w-[20%]">
+        <Link to="/" className="w-[20%] ">
           <img src="logo/8025530.jpg" alt="chitchat logo" />
         </Link>
 
