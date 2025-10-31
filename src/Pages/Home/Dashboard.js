@@ -18,12 +18,39 @@ const Dashboard = () => {
     handleGetUsersProfile,
     handleAddFriends,
     handlePostDisplay,
+    limit,
+    setLimit,
   } = useMyContext();
   const navigate = useNavigate();
+  const bottomRef = React.useRef(null);
 
   const { mySuccess, user } = userProfile || {};
   const { totalCount, data } = posts || {};
   const { FriendRequest, Friends } = user || {};
+
+  React.useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) {
+          setLimit((prev) => prev + 5);
+        }
+      },
+      { threshold: 1.0 }
+    );
+
+    if (bottomRef.current) observer.observe(bottomRef.current);
+
+    return () => {
+      if (bottomRef.current) observer.unobserve(bottomRef.current);
+    };
+  }, []);
+
+  // React.useEffect(() => {
+  //   if (bottomRef.current) {
+  //     console.log("reached");
+  //     setLimit((prevLimit) => prevLimit + 5);
+  //   }
+  // }, [bottomRef]);
 
   // console.log(user);
 
@@ -59,7 +86,7 @@ const Dashboard = () => {
                   }
                   alt={user && user.firstName ? user.firstName : "userName"}
                   loading="lazy"
-                  className="size-8 rounded-sm bg-gray-800 outline -outline-offset-1 outline-white/10"
+                  className="size-8 rounded-sm bg-gray-400 outline -outline-offset-1 outline-white/10 md:size-10 md:border-2 outline-1 outline-offset-1 outline-gray-200 has-[input:focus-within]:outline-2 has-[input:focus-within]:-outline-offset-2 has-[input:focus-within]:outline-yellow-800"
                 />
               </Link>
 
@@ -72,7 +99,7 @@ const Dashboard = () => {
                         name="post"
                         type="text"
                         placeholder="Write Your First Post"
-                        className="block min-w-0 grow py-2 pr-3 pl-1 text-base text-gray-900 placeholder:text-gray-400 focus:outline-none sm:text-sm/6"
+                        className="block min-w-0 grow py-2 pr-3 pl-1 text-base text-gray-900 placeholder:text-gray-400 focus:outline-none sm:text-sm/6 md:w-[400px]"
                       />
                     </Link>
                   </div>
@@ -113,79 +140,51 @@ const Dashboard = () => {
           )}
 
           {data && data?.length > 0 ? (
-            data.map((posts) => {
-              const result = formatDistanceToNowStrict(
-                new Date(`${posts.createdAt}`),
-                {
-                  addSuffix: true,
-                }
-              );
+            <div>
+              {data.map((posts) => {
+                const result = formatDistanceToNowStrict(
+                  new Date(`${posts.createdAt}`),
+                  {
+                    addSuffix: true,
+                  }
+                );
 
-              const posterEmail = posts.email;
-              const likerId = user.id;
-              const postId = posts._id;
-              const userHasLiked = posts.liked?.some(
-                (like) => like.likedByEmail === user.email
-              );
-              const alreadyFriends =
-                Array.isArray(Friends) &&
-                Friends.some((req) => req.email === posts.email);
+                const posterEmail = posts.email;
+                const likerId = user.id;
+                const postId = posts._id;
+                const userHasLiked = posts.liked?.some(
+                  (like) => like.likedByEmail === user.email
+                );
+                const alreadyFriends =
+                  Array.isArray(Friends) &&
+                  Friends.some((req) => req.email === posts.email);
 
-              
-
-              return (
-                <main key={posts._id}>
-                  <div
-                    className={
-                      posts.email === user.email
-                        ? "flex items-center  gap-2 mt-6"
-                        : "flex items-center justify-between gap-2 mt-6"
-                    }
-                    key={posts._id}
-                  >
-                    {posts.email === user.email ? (
-                      <Link to={`/profile`}>
-                        <img
-                          src={
-                            posts.profileImage
-                              ? posts.profileImage
-                              : "https://via.placeholder.com/48"
-                          }
-                          alt={
-                            posts && posts.firstName
-                              ? posts.firstName
-                              : "userName"
-                          }
-                          loading="lazy"
-                          className="w-[25px] h-[25px] rounded-full"
-                        />
-                      </Link>
-                    ) : (
-                      <button
-                        onClick={() => {
-                          handleGetUsersProfile(posterEmail);
-                          setTimeout(() => {
-                            navigate("/UserProfile");
-                          }, 1500);
-                        }}
-                      >
-                        <img
-                          alt={posts.firstName}
-                          src={posts.profileImage}
-                          loading="lazy"
-                          className="w-[25px] h-[25px] rounded-full"
-                        />
-                      </button>
-                    )}
-
-                    <div className="flex  items-center gap-2">
+                return (
+                  <main key={posts._id}>
+                    <div
+                      className={
+                        posts.email === user.email
+                          ? "flex items-center  gap-2 mt-6"
+                          : "flex items-center justify-between gap-2 mt-6"
+                      }
+                      key={posts._id}
+                    >
                       {posts.email === user.email ? (
-                        <Link
-                          to={`/profile`}
-                          className="flex items-center gap-1 capitalize border-r px-1 "
-                        >
-                          <h2 className="text-xs"> {posts.firstName} </h2>
-                          <h2 className="text-xs"> {posts.lastName} </h2>
+                        <Link to={`/profile`}>
+                          <img
+                            src={
+                              posts.profileImage
+                                ? posts.profileImage
+                                : "https://via.placeholder.com/48"
+                            }
+                            alt={
+                              posts && posts.firstName
+                                ? posts.firstName
+                                : "userName"
+                            }
+                            loading="lazy"
+                            className="w-[25px] h-[25px] rounded-full"
+                          />
                         </Link>
                       ) : (
                         <button
@@ -195,170 +194,198 @@ const Dashboard = () => {
                               navigate("/UserProfile");
                             }, 1500);
                           }}
-                          className="flex items-center gap-1 capitalize border-r px-1"
                         >
-                          <h2 className="text-xs"> {posts.firstName} </h2>
-                          <h2 className="text-xs"> {posts.lastName} </h2>
+                          <img
+                            alt={posts.firstName}
+                            src={posts.profileImage}
+                            loading="lazy"
+                            className="w-[25px] h-[25px] rounded-full"
+                          />
                         </button>
                       )}
-                      <p className="text-xs"> {result} </p>
-                    </div>
-                    {posts.email === user.email ? (
-                      <div></div>
-                    ) : (
-                      <div>
-                        {alreadyFriends ? (
-                          <div>
-                            {posts.email === user.email ? (
-                              <Link
-                                to={`/profile`}
-                                className="border rounded-lg bg-yellow-800 hover:bg-yellow-600 capitalize text-white py-1 px-2 text-sm "
-                              >
-                                view user
-                              </Link>
-                            ) : (
-                              <h2
-                                className="border rounded-lg bg-yellow-800 hover:bg-yellow-600 capitalize text-white py-1 px-2 text-sm "
-                                onClick={() => {
-                                  handleGetUsersProfile(posterEmail);
-                                  setTimeout(() => {
-                                    navigate("/UserProfile");
-                                  }, 1500);
-                                }}
-                              >
-                                view user
-                              </h2>
-                            )}
-                          </div>
-                        ) : (
-                          
-                          <h2
-                            className="border rounded-lg bg-yellow-800 hover:bg-yellow-600 capitalize text-white py-1 px-2 text-sm "
-                            onClick={() => handleAddFriends(posts.email)}
-                          >
-                            connect
-                          </h2>
-                        )}
-                      </div>
-                    )}
-                  </div>
 
-                  <div
-                    className="mt-3"
-                    onClick={() => {
-                      handlePostDisplay(posts.email, posts._id);
-                      navigate("/postDisplay");
-                    }}
-                  >
-                    <h3
-                      className="capitalize text-sm"
+                      <div className="flex  items-center gap-2">
+                        {posts.email === user.email ? (
+                          <Link
+                            to={`/profile`}
+                            className="flex items-center gap-1 capitalize border-r px-1 "
+                          >
+                            <h2 className="text-xs"> {posts.firstName} </h2>
+                            <h2 className="text-xs"> {posts.lastName} </h2>
+                          </Link>
+                        ) : (
+                          <button
+                            onClick={() => {
+                              handleGetUsersProfile(posterEmail);
+                              setTimeout(() => {
+                                navigate("/UserProfile");
+                              }, 1500);
+                            }}
+                            className="flex items-center gap-1 capitalize border-r px-1"
+                          >
+                            <h2 className="text-xs"> {posts.firstName} </h2>
+                            <h2 className="text-xs"> {posts.lastName} </h2>
+                          </button>
+                        )}
+                        <p className="text-xs"> {result} </p>
+                      </div>
+                      {posts.email === user.email ? (
+                        <div></div>
+                      ) : (
+                        <div>
+                          {alreadyFriends ? (
+                            <div>
+                              {posts.email === user.email ? (
+                                <Link
+                                  to={`/profile`}
+                                  className="border rounded-lg bg-yellow-800 hover:bg-yellow-600 capitalize text-white py-1 px-2 text-sm "
+                                >
+                                  view user
+                                </Link>
+                              ) : (
+                                <h2
+                                  className="border rounded-lg bg-yellow-800 hover:bg-yellow-600 capitalize text-white py-1 px-2 text-sm "
+                                  onClick={() => {
+                                    handleGetUsersProfile(posterEmail);
+                                    setTimeout(() => {
+                                      navigate("/UserProfile");
+                                    }, 1500);
+                                  }}
+                                >
+                                  view user
+                                </h2>
+                              )}
+                            </div>
+                          ) : (
+                            <h2
+                              className="border rounded-lg bg-yellow-800 hover:bg-yellow-600 capitalize text-white py-1 px-2 text-sm "
+                              onClick={() => handleAddFriends(posts.email)}
+                            >
+                              connect
+                            </h2>
+                          )}
+                        </div>
+                      )}
+                    </div>
+
+                    <div
+                      className="mt-3"
                       onClick={() => {
                         handlePostDisplay(posts.email, posts._id);
                         navigate("/postDisplay");
                       }}
                     >
-                      {posts.postText.length > 50
-                        ? posts.postText.slice(0, 200) + "..."
-                        : posts.postText}
-                    </h3>
-
-                    {posts.mediaUrl ? (
-                      <div>
-                        <img
-                          src={posts.mediaUrl}
-                          alt={posts.firstName}
-                          loading="lazy"
-                          className="w-full h-[200px] rounded-sm mt-3"
-                        />
-                      </div>
-                    ) : (
-                      <div></div>
-                    )}
-                  </div>
-
-                  <div className="flex items-center gap-5 mt-2">
-                    <span className="flex items-center gap-1">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke-width="1.5"
-                        stroke="currentColor"
-                        class={`size-4  ${
-                          userHasLiked
-                            ? "size-5 text-white p-1 bg-yellow-800 rounded-full"
-                            : ""
-                        }`}
-                        onClick={() => {
-                          userHasLiked
-                            ? handleUnLikePosts(posterEmail, likerId, postId)
-                            : handleLikedPosts(posterEmail, likerId, postId);
-                        }}
-                      >
-                        <path
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z"
-                        />
-                      </svg>
-                      <p className="text-sm">{posts.liked?.length}</p>
-                    </span>
-
-                    <span className="flex items-center gap-1">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke-width="1.5"
-                        stroke="currentColor"
-                        class={`size-4  ${
-                          posts.comments?.length ? "size-5  rounded-full" : ""
-                        }`}
+                      <h3
+                        className="capitalize text-sm"
                         onClick={() => {
                           handlePostDisplay(posts.email, posts._id);
                           navigate("/postDisplay");
                         }}
                       >
-                        <path
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          d="M12 20.25c4.97 0 9-3.694 9-8.25s-4.03-8.25-9-8.25S3 7.444 3 12c0 2.104.859 4.023 2.273 5.48.432.447.74 1.04.586 1.641a4.483 4.483 0 0 1-.923 1.785A5.969 5.969 0 0 0 6 21c1.282 0 2.47-.402 3.445-1.087.81.22 1.668.337 2.555.337Z"
-                        />
-                      </svg>
-                      <div className="text-sm">
-                        <p
-                          className="text-sm"
+                        {posts.postText.length > 50
+                          ? posts.postText.slice(0, 200) + "..."
+                          : posts.postText}
+                      </h3>
+
+                      {posts.mediaUrl ? (
+                        <div>
+                          <img
+                            src={posts.mediaUrl}
+                            alt={posts.firstName}
+                            loading="lazy"
+                            className="w-full h-[200px] rounded-sm mt-3"
+                          />
+                        </div>
+                      ) : (
+                        <div></div>
+                      )}
+                    </div>
+
+                    <div className="flex items-center gap-5 mt-2">
+                      <span className="flex items-center gap-1">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke-width="1.5"
+                          stroke="currentColor"
+                          class={`size-4  ${
+                            userHasLiked
+                              ? "size-5 text-white p-1 bg-yellow-800 rounded-full"
+                              : ""
+                          }`}
+                          onClick={() => {
+                            userHasLiked
+                              ? handleUnLikePosts(posterEmail, likerId, postId)
+                              : handleLikedPosts(posterEmail, likerId, postId);
+                          }}
+                        >
+                          <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z"
+                          />
+                        </svg>
+                        <p className="text-sm">{posts.liked?.length}</p>
+                      </span>
+
+                      <span className="flex items-center gap-1">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke-width="1.5"
+                          stroke="currentColor"
+                          class={`size-4  ${
+                            posts.comments?.length ? "size-5  rounded-full" : ""
+                          }`}
                           onClick={() => {
                             handlePostDisplay(posts.email, posts._id);
                             navigate("/postDisplay");
                           }}
                         >
-                          {posts.comments?.length}
-                        </p>
-                      </div>
-                    </span>
+                          <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            d="M12 20.25c4.97 0 9-3.694 9-8.25s-4.03-8.25-9-8.25S3 7.444 3 12c0 2.104.859 4.023 2.273 5.48.432.447.74 1.04.586 1.641a4.483 4.483 0 0 1-.923 1.785A5.969 5.969 0 0 0 6 21c1.282 0 2.47-.402 3.445-1.087.81.22 1.668.337 2.555.337Z"
+                          />
+                        </svg>
+                        <div className="text-sm">
+                          <p
+                            className="text-sm"
+                            onClick={() => {
+                              handlePostDisplay(posts.email, posts._id);
+                              navigate("/postDisplay");
+                            }}
+                          >
+                            {posts.comments?.length}
+                          </p>
+                        </div>
+                      </span>
 
-                    <span className="flex items-center gap-1">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke-width="1.5"
-                        stroke="currentColor"
-                        class="size-4"
-                      >
-                        <path
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          d="M7.217 10.907a2.25 2.25 0 1 0 0 2.186m0-2.186c.18.324.283.696.283 1.093s-.103.77-.283 1.093m0-2.186 9.566-5.314m-9.566 7.5 9.566 5.314m0 0a2.25 2.25 0 1 0 3.935 2.186 2.25 2.25 0 0 0-3.935-2.186Zm0-12.814a2.25 2.25 0 1 0 3.933-2.185 2.25 2.25 0 0 0-3.933 2.185Z"
-                        />
-                      </svg>
-                      {/* <p className="text-sm">0</p> */}
-                    </span>
-                  </div>
-                </main>
-              );
-            })
+                      <span className="flex items-center gap-1">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke-width="1.5"
+                          stroke="currentColor"
+                          class="size-4"
+                        >
+                          <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            d="M7.217 10.907a2.25 2.25 0 1 0 0 2.186m0-2.186c.18.324.283.696.283 1.093s-.103.77-.283 1.093m0-2.186 9.566-5.314m-9.566 7.5 9.566 5.314m0 0a2.25 2.25 0 1 0 3.935 2.186 2.25 2.25 0 0 0-3.935-2.186Zm0-12.814a2.25 2.25 0 1 0 3.933-2.185 2.25 2.25 0 0 0-3.933 2.185Z"
+                          />
+                        </svg>
+                        {/* <p className="text-sm">0</p> */}
+                      </span>
+                    </div>
+                  </main>
+                );
+              })}
+              <div ref={bottomRef} style={{ height: "1px" }} />
+            </div>
           ) : (
             <div className="flex flex-col items-center justify-center mt-16 animate-fade-in">
               {/* Animated SVG */}
