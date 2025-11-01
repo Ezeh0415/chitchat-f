@@ -42,10 +42,10 @@ const MessagePage = () => {
 
   React.useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages]);
+  }, [messages, bottomRef]);
 
   return (
-    <div className="flex flex-col h-[89vh] bg-yellow-50">
+    <div className="flex flex-col h-[89vh] bg-yellow-50 md:h-[94vh]">
       {/* Header */}
       <div>
         <svg
@@ -89,7 +89,7 @@ const MessagePage = () => {
 
       {/* Chat messages */}
 
-      <div className="flex flex-col h-[75vh] p-4 overflow-y-auto space-y-3 bg-yellow-50">
+      <div className="flex flex-col h-[75vh] p-4 overflow-y-auto space-y-3 bg-yellow-50 md:h-[100vh]">
         {Chat?.length === 0 ? (
           <div className="flex flex-1 items-center justify-center text-gray-400 italic animate-pulse">
             No messages yet — start chatting 💬

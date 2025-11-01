@@ -23,7 +23,8 @@ const Header = () => {
   return (
     <div>
       <header className="flex items-center justify-between">
-        <Link to="/" className="w-[20%] ">
+
+        <Link to="/" className="w-[20%] md:w-[10%]">
           <img src="logo/8025530.jpg" alt="chitchat logo" />
         </Link>
 
@@ -35,7 +36,7 @@ const Header = () => {
               viewBox="0 0 24 24"
               stroke-width="1.5"
               stroke="currentColor"
-              class="size-4"
+              class="size-4 md:size-7"
             >
               <path
                 stroke-linecap="round"
@@ -69,7 +70,11 @@ const Header = () => {
                 viewBox="0 0 24 24"
                 stroke-width="1.5"
                 stroke="currentColor"
-                class={unreadCount ? "size-4 text-red-600" : "size-5"}
+                class={
+                  unreadCount
+                    ? "size-4 text-red-600 md:size-6"
+                    : "size-5 md:size-8"
+                }
               >
                 <path
                   stroke-linecap="round"
@@ -78,7 +83,7 @@ const Header = () => {
                 />
               </svg>
             </div>
-            <h2 className="text-xs">notification</h2>
+            <h2 className="text-xs md:text-lg">notification</h2>
           </NavLink>
 
           <NavLink
@@ -96,7 +101,7 @@ const Header = () => {
               viewBox="0 0 24 24"
               stroke-width="1.5"
               stroke="currentColor"
-              class="size-5"
+              class="size-5 md:size-8 block md:hidden"
             >
               <path
                 stroke-linecap="round"
@@ -105,14 +110,14 @@ const Header = () => {
               />
             </svg>
 
-            <h2 className="text-xs">message</h2>
+            <h2 className="text-xs md:text-lg block md:hidden">message</h2>
           </NavLink>
 
           <Link to="/profile" className="w-[35px] h-[35px] rounded-full">
             <img
               src="logo/premium_photo-1673002094195-f18084be89ce.avif"
               alt="live random image"
-              className="w-[35px] h-[35px] rounded-full"
+              className="w-[35px] h-[35px] rounded-full md:w-[55px] md:h-[35px]"
             />
           </Link>
         </div>

@@ -39,6 +39,7 @@ export function MyContextProvider({ children }) {
   const [messages, setMessages] = React.useState(null);
   const [Chat, setChat] = React.useState([]);
   const [refreshChat, setRefreshChat] = React.useState(false);
+  const [limit, setLimit] = React.useState(5);
   const storedUser = localStorage.getItem("user");
   const users = JSON.parse(storedUser);
   const { email } = users || {};
@@ -75,7 +76,7 @@ export function MyContextProvider({ children }) {
     },
 
     {
-      url: `${Base_Url}/api/posts`,
+      url: `${Base_Url}/api/posts?limit=${limit}`,
       options: {
         method: "GET",
         headers: {
@@ -1123,7 +1124,6 @@ export function MyContextProvider({ children }) {
 
     socket.on("chatMessage", (msg) => {
       setMessages(msg);
-      
     });
 
     try {
@@ -1254,7 +1254,7 @@ export function MyContextProvider({ children }) {
     const interval = setInterval(fetchData, 1000); // auto-refresh every 1s
 
     return () => clearInterval(interval); // cleanup on unmount
-  }, [email]); // only runs when email is set
+  }, [email, limit]); // only runs when email is set
 
   // console.log("Results from multiple requests:", data);
 
@@ -1266,6 +1266,8 @@ export function MyContextProvider({ children }) {
         posts,
         Users,
         email,
+        limit,
+        setLimit,
         // fetch request section end
 
         // image section setup
