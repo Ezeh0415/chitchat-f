@@ -76,7 +76,7 @@ const EditProfilePage = () => {
 
           {/* Input Fields */}
           <form className="space-y-6">
-            <div className="flex flex-col md:flex-row gap-4">
+            {/* <div className="flex flex-col md:flex-row gap-4">
               <div className="w-full">
                 <label className="block text-gray-700 font-medium mb-1">
                   First Name
@@ -97,7 +97,7 @@ const EditProfilePage = () => {
                   className="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-yellow-700"
                 />
               </div>
-            </div>
+            </div> */}
 
             <div>
               <label className="block text-gray-700 font-medium mb-1">
@@ -114,6 +114,7 @@ const EditProfilePage = () => {
             <div className="flex justify-end gap-4">
               <button
                 type="button"
+                onClick={() => navigate("/profile")}
                 className="px-5 py-2 border border-gray-400 text-gray-700 rounded hover:bg-gray-100 transition"
               >
                 Cancel

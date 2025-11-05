@@ -21,11 +21,13 @@ const NotificationPage = () => {
 
   return (
     <section>
-      <Navbar />
+      <div className="block lg:hidden">
+        <Navbar />
+      </div>
       <LogoutModel />
       <div className=" py-1 flex justify-center">
         <div className="w-full max-w-2xl  rounded-lg  p-2">
-          <h2 className="text-2xl font-bold text-yellow-900 mb-6">
+          <h2 className="text-2xl font-bold text-yellow-900 mb-6 md:text-3xl">
             Notifications
           </h2>
 
@@ -55,7 +57,7 @@ const NotificationPage = () => {
                       <img
                         src={user?.profileImage}
                         alt="User profile"
-                        className="w-10 h-10 rounded-full object-cover"
+                        className="w-10 h-10 rounded-full object-cover md:w-12 md:h-12"
                       />
 
                       {/* Notification content */}
@@ -75,7 +77,7 @@ const NotificationPage = () => {
                         <div>
                           {/* Timestamp */}
                           <span
-                            className={`text-xs px-2 py-0.5 mb-1 mt-1 rounded-full ${
+                            className={`text-xs px-2 py-0.5 mb-1 mt-1 rounded-full md:text-lg ${
                               notif.read
                                 ? "bg-gray-100 text-gray-500"
                                 : "bg-yellow-100 text-yellow-800"
@@ -91,7 +93,7 @@ const NotificationPage = () => {
 
                           {/* Optional subtitle or description */}
                           {notif.userDid && (
-                            <p className="text-sm text-gray-600 mt-1">
+                            <p className="text-sm text-gray-600 mt-1 md:text-lg">
                               {notif.firstName} : {notif.userDid}
                             </p>
                           )}
@@ -102,7 +104,7 @@ const NotificationPage = () => {
                       {!notif.read && (
                         <div className="mt-1">
                           <span
-                            className="inline-block w-3 h-3 bg-green-500 rounded-full"
+                            className="inline-block w-3 h-3 bg-green-500 rounded-full md:w-4 md:h-4"
                             title="Unread"
                           />
                         </div>
@@ -130,14 +132,14 @@ const NotificationPage = () => {
                         <img
                           src={user?.profileImage}
                           alt="User profile"
-                          className="w-10 h-10 rounded-full object-cover"
+                          className="w-10 h-10 rounded-full object-cover md:w-12 md:h-12"
                         />
 
                         {/* Notification content */}
                         <div className="flex-1">
                           <div className="flex justify-between items-center">
                             <h4
-                              className={`text-sm font-medium ${
+                              className={`text-sm font-medium md:text-lg ${
                                 notif.read ? "text-gray-800" : "text-yellow-800"
                               }`}
                             >
@@ -148,7 +150,7 @@ const NotificationPage = () => {
                           <div>
                             {/* Timestamp */}
                             <span
-                              className={`text-xs px-2 py-0.5 mb-1 mt-1 rounded-full ${
+                              className={`text-xs px-2 py-0.5 mb-1 mt-1 rounded-full md:text-lg ${
                                 notif.read
                                   ? "bg-gray-100 text-gray-500"
                                   : "bg-yellow-100 text-yellow-800"
@@ -164,7 +166,7 @@ const NotificationPage = () => {
 
                             {/* Optional subtitle or description */}
                             {notif.userDid && (
-                              <p className="text-sm text-gray-600 mt-1">
+                              <p className="text-sm text-gray-600 mt-1 md:text-lg">
                                 {notif.firstName} : {notif.userDid}
                               </p>
                             )}
@@ -175,7 +177,7 @@ const NotificationPage = () => {
                         {!notif.read && (
                           <div className="mt-1">
                             <span
-                              className="inline-block w-3 h-3 bg-green-500 rounded-full"
+                              className="inline-block w-3 h-3 bg-green-500 rounded-full md:w-4 md:h-4"
                               title="Unread"
                             />
                           </div>

@@ -1,200 +1,176 @@
-import * as React from "react";
-import { styled, alpha } from "@mui/material/styles";
-import Box from "@mui/material/Box";
-import Typography from "@mui/material/Typography";
-import MailIcon from "@mui/icons-material/Mail";
-import DeleteIcon from "@mui/icons-material/Delete";
-import Label from "@mui/icons-material/Label";
-import SupervisorAccountIcon from "@mui/icons-material/SupervisorAccount";
-import InfoIcon from "@mui/icons-material/Info";
-import ForumIcon from "@mui/icons-material/Forum";
-import LocalOfferIcon from "@mui/icons-material/LocalOffer";
-import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
-import ArrowRightIcon from "@mui/icons-material/ArrowRight";
+import React from "react";
+import { Link } from "react-router-dom";
+import { useMyContext } from "../../Context/MyContext";
 
-import { SimpleTreeView } from "@mui/x-tree-view/SimpleTreeView";
-import {
-  TreeItemContent,
-  TreeItemIconContainer,
-  TreeItemRoot,
-  TreeItemGroupTransition,
-} from "@mui/x-tree-view/TreeItem";
-import { useTreeItem } from "@mui/x-tree-view/useTreeItem";
-import { TreeItemProvider } from "@mui/x-tree-view/TreeItemProvider";
-import { TreeItemIcon } from "@mui/x-tree-view/TreeItemIcon";
-
-const CustomTreeItemRoot = styled(TreeItemRoot)(({ theme, ownerState }) => ({
-  "--tree-view-color": ownerState.color,
-  "--tree-view-bg-color": ownerState.bgColor,
-  color: (theme.vars || theme).palette.text.secondary,
-  ...theme.applyStyles("dark", {
-    "--tree-view-color": ownerState.colorForDarkMode,
-    "--tree-view-bg-color": ownerState.bgColorForDarkMode,
-  }),
-}));
-
-const CustomTreeItemContent = styled(TreeItemContent)(({ theme }) => ({
-  marginBottom: theme.spacing(0.3),
-  color: (theme.vars || theme).palette.text.secondary,
-  borderRadius: theme.spacing(2),
-  paddingRight: theme.spacing(1),
-  paddingLeft: `calc(${theme.spacing(
-    1
-  )} + var(--TreeView-itemChildrenIndentation) * var(--TreeView-itemDepth))`,
-  fontWeight: theme.typography.fontWeightMedium,
-  "&[data-expanded]": {
-    fontWeight: theme.typography.fontWeightRegular,
-  },
-  "&:hover": {
-    backgroundColor: (theme.vars || theme).palette.action.hover,
-  },
-  "&[data-focused], &[data-selected], &[data-selected][data-focused]": {
-    backgroundColor: `var(--tree-view-bg-color, ${
-      (theme.vars || theme).palette.action.selected
-    })`,
-    color: "var(--tree-view-color)",
-  },
-}));
-
-const CustomTreeItemIconContainer = styled(TreeItemIconContainer)(
-  ({ theme }) => ({
-    marginRight: theme.spacing(1),
-  })
-);
-
-const CustomTreeItem = React.forwardRef(function CustomTreeItem(props, ref) {
-  const {
-    id,
-    itemId,
-    label,
-    disabled,
-    children,
-    bgColor,
-    color,
-    labelIcon: LabelIcon,
-    labelInfo,
-    colorForDarkMode,
-    bgColorForDarkMode,
-    ...other
-  } = props;
-
-  const {
-    getContextProviderProps,
-    getRootProps,
-    getContentProps,
-    getIconContainerProps,
-    getLabelProps,
-    getGroupTransitionProps,
-    status,
-  } = useTreeItem({ id, itemId, children, label, disabled, rootRef: ref });
-
-  const treeItemRootOwnerState = {
-    color,
-    bgColor,
-    colorForDarkMode,
-    bgColorForDarkMode,
-  };
+const DesktopNav = () => {
+  const { userProfile, handleLogout } = useMyContext();
+  const { mySuccess, user } = userProfile || {};
+  const unreadCount = [
+    ...(user?.notifications || []),
+    ...(user?.FriendRequestsNotifications || []),
+  ].filter((n) => !n.read).length;
 
   return (
-    <TreeItemProvider {...getContextProviderProps()}>
-      <CustomTreeItemRoot
-        {...getRootProps(other)}
-        ownerState={treeItemRootOwnerState}
-      >
-        <CustomTreeItemContent {...getContentProps()}>
-          <CustomTreeItemIconContainer {...getIconContainerProps()}>
-            <TreeItemIcon status={status} />
-          </CustomTreeItemIconContainer>
-          <Box
-            sx={{
-              display: "flex",
-              flexGrow: 1,
-              alignItems: "center",
-              p: 0.5,
-              pr: 0,
-            }}
-          >
-            <Box component={LabelIcon} color="inherit" sx={{ mr: 1 }} />
-            <Typography
-              {...getLabelProps({
-                variant: "body2",
-                sx: { display: "flex", fontWeight: "inherit", flexGrow: 1 },
-              })}
+    <nav className=" mt-2 h-[88vh] relative">
+      <div className="max-w-7xl mx-auto p-2">
+        <div className="flex flex-col space-y-3 py-4">
+          {/* Logo */}
+          <div className="text-xl font-bold text-purple-600 flex items-center">
+            <svg
+              className="w-6 h-6 mr-2"
+              fill="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path d="M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z" />
+            </svg>
+            ChatApp
+          </div>
+
+          {/* Navigation Items */}
+          <div className="flex flex-col space-y-6 capitalize">
+            <button className="flex items-center text-gray-600 hover:text-purple-600 transition-colors text-xl">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke-width="1.5"
+                stroke="currentColor"
+                class="w-5 h-5 mr-3"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M18 18.72a9.094 9.094 0 0 0 3.741-.479 3 3 0 0 0-4.682-2.72m.94 3.198.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0 1 12 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 0 1 6 18.719m12 0a5.971 5.971 0 0 0-.941-3.197m0 0A5.995 5.995 0 0 0 12 12.75a5.995 5.995 0 0 0-5.058 2.772m0 0a3 3 0 0 0-4.681 2.72 8.986 8.986 0 0 0 3.74.477m.94-3.197a5.971 5.971 0 0 0-.94 3.197M15 6.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Zm6 3a2.25 2.25 0 1 1-4.5 0 2.25 2.25 0 0 1 4.5 0Zm-13.5 0a2.25 2.25 0 1 1-4.5 0 2.25 2.25 0 0 1 4.5 0Z"
+                />
+              </svg>
+              groups
+            </button>
+
+            <button className="flex items-center text-gray-600 hover:text-purple-600 transition-colors text-xl">
+              <svg
+                className="w-5 h-5 mr-3"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"
+                />
+              </svg>
+              Reels
+            </button>
+
+            <button className="flex items-center text-gray-600 hover:text-purple-600 transition-colors text-lg">
+              <svg
+                className="w-5 h-5 mr-3"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"
+                />
+              </svg>
+              Add Friends
+            </button>
+
+            <Link
+              to="/notification"
+              className="flex items-center text-gray-600 hover:text-purple-600 transition-colors "
+            >
+              <svg
+                className={`w-5 h-5 mr-3 ${unreadCount ? "bounce" : ""} `}
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M15 17h5l-5 5v-5zM10.24 8.56a5.97 5.97 0 01-4.66-7.4 1 1 0 00-.68-1.2A10.46 10.46 0 003 4.5a10.5 10.5 0 009 10 1 1 0 00.94-.69 5.99 5.99 0 01-2.7-4.25z"
+                />
+              </svg>
+              <div>
+                {/* <span>
+                 notification
+              </span> */}
+                <span className="flex gap-1">
+                  <h2>Notification</h2>{" "}
+                  <small className={unreadCount ? "text-red-700" : "hidden"}>
+                    {unreadCount}
+                  </small>
+                </span>
+              </div>
+            </Link>
+          </div>
+        </div>
+      </div>
+
+      <div className="absolute bottom-4 space-y-4">
+        <div className="flex items-center gap-2">
+          <Link to="/profile" className="w-[25%] h-[20%] rounded-full">
+            <img
+              src={
+                user && user.profileImage
+                  ? user.profileImage
+                  : "https://via.placeholder.com/48"
+              }
+              alt={user && user.firstName ? user.firstName : "userName"}
+              loading="lazy"
+              className="size-8 rounded-sm bg-gray-400 outline -outline-offset-1 outline-white/10 md:size-10 md:border-2 outline-1 outline-offset-1 outline-gray-200 has-[input:focus-within]:outline-2 has-[input:focus-within]:-outline-offset-2 has-[input:focus-within]:outline-yellow-800"
             />
-            <Typography variant="caption" color="inherit">
-              {labelInfo}
-            </Typography>
-          </Box>
-        </CustomTreeItemContent>
-        {children && <TreeItemGroupTransition {...getGroupTransitionProps()} />}
-      </CustomTreeItemRoot>
-    </TreeItemProvider>
+          </Link>
+          <span>
+            <Link to="/profile" className="text-lg capitalize">
+              {user && user.firstName}
+            </Link>
+          </span>
+        </div>
+        <div className="flex items-center gap-1">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="1.5"
+            stroke="currentColor"
+            class="size-8"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M10.343 3.94c.09-.542.56-.94 1.11-.94h1.093c.55 0 1.02.398 1.11.94l.149.894c.07.424.384.764.78.93.398.164.855.142 1.205-.108l.737-.527a1.125 1.125 0 0 1 1.45.12l.773.774c.39.389.44 1.002.12 1.45l-.527.737c-.25.35-.272.806-.107 1.204.165.397.505.71.93.78l.893.15c.543.09.94.559.94 1.109v1.094c0 .55-.397 1.02-.94 1.11l-.894.149c-.424.07-.764.383-.929.78-.165.398-.143.854.107 1.204l.527.738c.32.447.269 1.06-.12 1.45l-.774.773a1.125 1.125 0 0 1-1.449.12l-.738-.527c-.35-.25-.806-.272-1.203-.107-.398.165-.71.505-.781.929l-.149.894c-.09.542-.56.94-1.11.94h-1.094c-.55 0-1.019-.398-1.11-.94l-.148-.894c-.071-.424-.384-.764-.781-.93-.398-.164-.854-.142-1.204.108l-.738.527c-.447.32-1.06.269-1.45-.12l-.773-.774a1.125 1.125 0 0 1-.12-1.45l.527-.737c.25-.35.272-.806.108-1.204-.165-.397-.506-.71-.93-.78l-.894-.15c-.542-.09-.94-.56-.94-1.109v-1.094c0-.55.398-1.02.94-1.11l.894-.149c.424-.07.765-.383.93-.78.165-.398.143-.854-.108-1.204l-.526-.738a1.125 1.125 0 0 1 .12-1.45l.773-.773a1.125 1.125 0 0 1 1.45-.12l.737.527c.35.25.807.272 1.204.107.397-.165.71-.505.78-.929l.15-.894Z"
+            />
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"
+            />
+          </svg>
+          <h2 className="text-xl capitalize">settings</h2>
+        </div>
+        <div className="flex items-center gap-1">
+          <svg
+            xmlns="http://www.w3.org/2000/svg "
+            className="size-8"
+            viewBox="0 0 640 640"
+            onClick={handleLogout}
+          >
+            <path d="M384 128L448 128L448 544C448 561.7 462.3 576 480 576L512 576C529.7 576 544 561.7 544 544C544 526.3 529.7 512 512 512L512 128C512 92.7 483.3 64 448 64L352 64L352 64L192 64C156.7 64 128 92.7 128 128L128 512C110.3 512 96 526.3 96 544C96 561.7 110.3 576 128 576L352 576C369.7 576 384 561.7 384 544L384 128zM256 320C256 302.3 270.3 288 288 288C305.7 288 320 302.3 320 320C320 337.7 305.7 352 288 352C270.3 352 256 337.7 256 320z" />
+          </svg>
+          <h2 className="text-xl capitalize" onClick={handleLogout}>
+            logout
+          </h2>
+        </div>
+      </div>
+    </nav>
   );
-});
+};
 
-function EndIcon() {
-  return <div style={{ width: 24 }} />;
-}
-
-export default function DesktopNav() {
-  return (
-    <SimpleTreeView
-      aria-label="gmail"
-      defaultExpandedItems={["3"]}
-      defaultSelectedItems="5"
-      slots={{
-        expandIcon: ArrowRightIcon,
-        collapseIcon: ArrowDropDownIcon,
-        endIcon: EndIcon,
-      }}
-      sx={{ flexGrow: 1, maxWidth: 400 }}
-      itemChildrenIndentation={20}
-    >
-      <CustomTreeItem itemId="1" label="All Mail" labelIcon={MailIcon} />
-      <CustomTreeItem itemId="2" label="Trash" labelIcon={DeleteIcon} />
-      <CustomTreeItem itemId="3" label="Categories" labelIcon={Label}>
-        <CustomTreeItem
-          itemId="5"
-          label="Social"
-          labelIcon={SupervisorAccountIcon}
-          labelInfo="90"
-          color="#1a73e8"
-          bgColor="#e8f0fe"
-          colorForDarkMode="#B8E7FB"
-          bgColorForDarkMode={alpha("#00b4ff", 0.2)}
-        />
-        <CustomTreeItem
-          itemId="6"
-          label="Updates"
-          labelIcon={InfoIcon}
-          labelInfo="2,294"
-          color="#e3742f"
-          bgColor="#fcefe3"
-          colorForDarkMode="#FFE2B7"
-          bgColorForDarkMode={alpha("#ff8f00", 0.2)}
-        />
-        <CustomTreeItem
-          itemId="7"
-          label="Forums"
-          labelIcon={ForumIcon}
-          labelInfo="3,566"
-          color="#a250f5"
-          bgColor="#f3e8fd"
-          colorForDarkMode="#D9B8FB"
-          bgColorForDarkMode={alpha("#9035ff", 0.15)}
-        />
-        <CustomTreeItem
-          itemId="8"
-          label="Promotions"
-          labelIcon={LocalOfferIcon}
-          labelInfo="733"
-          color="#3c8039"
-          bgColor="#e6f4ea"
-          colorForDarkMode="#CCE8CD"
-          bgColorForDarkMode={alpha("#64ff6a", 0.2)}
-        />
-      </CustomTreeItem>
-      <CustomTreeItem itemId="4" label="History" labelIcon={Label} />
-    </SimpleTreeView>
-  );
-}
+export default DesktopNav;

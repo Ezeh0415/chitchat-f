@@ -52,8 +52,11 @@ const MessageFriends = () => {
 
   return (
     <section>
-      <Navbar />
-      <LogoutModel />
+      <div className="block md:hidden">
+        <Navbar />
+
+        <LogoutModel />
+      </div>
       <div>
         <h1 className="text-xl capitalize mt-4">chats</h1>
 

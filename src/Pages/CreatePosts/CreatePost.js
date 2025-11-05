@@ -105,7 +105,7 @@ const CreatePost = () => {
           viewBox="0 0 24 24"
           stroke-width="1.5"
           stroke="currentColor"
-          class="size-6 font-bold"
+          class="size-6 font-bold md:size-8"
           onClick={() => setOpen(true)}
         >
           <path
@@ -115,10 +115,10 @@ const CreatePost = () => {
           />
         </svg>
 
-        <p className="text-center text-lg font-bold">create post</p>
+        <p className="text-center text-lg font-bold md:text-2xl">create post</p>
 
         <div className="flex items-center gap-2 px-1.5 rounded-lg bg-yellow-800 text-white">
-          <h3 className="text-lg font-bold" onClick={handleClick}>
+          <h3 className="text-lg font-bold md:text-xl" onClick={handleClick}>
             post
           </h3>
           <svg
@@ -127,7 +127,7 @@ const CreatePost = () => {
             viewBox="0 0 24 24"
             stroke-width="1.5"
             stroke="currentColor"
-            class="size-4"
+            class="size-4 md:size-6"
           >
             <path
               stroke-linecap="round"
@@ -145,14 +145,17 @@ const CreatePost = () => {
             (user && user.profileImage) ||
             "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
           }
-          className="size-10 rounded-full bg-gray-800 outline -outline-offset-1 outline-white/10"
+          className="size-10 rounded-full bg-gray-800 outline -outline-offset-1 outline-white/10 md:size-15"
         />
         <div className="capitalize flex item-center gap-1">
-          <h1 className="text-sm">
+          <h1 className="text-sm md:text-xl">
             {" "}
             {(user && user.firstName) || "firstName"}{" "}
           </h1>
-          <h1 className="text-sm"> {(user && user.lastName) || "lastName"}</h1>
+          <h1 className="text-sm md:text-xl">
+            {" "}
+            {(user && user.lastName) || "lastName"}
+          </h1>
         </div>
       </section>
 
@@ -160,7 +163,7 @@ const CreatePost = () => {
         <form>
           <label
             htmlFor="message"
-            className="block mb-2 font-semibold text-gray-700"
+            className="block mb-2 font-semibold text-gray-700 md:text-xl"
           >
             Your post
           </label>
@@ -231,7 +234,7 @@ const CreatePost = () => {
               viewBox="0 0 24 24"
               stroke-width="1.5"
               stroke="currentColor"
-              class="size-5 text-yellow-800"
+              class="size-5 text-yellow-800 md:size-8"
             >
               <path
                 stroke-linecap="round"
@@ -244,7 +247,7 @@ const CreatePost = () => {
                 d="M16.5 12.75a4.5 4.5 0 1 1-9 0 4.5 4.5 0 0 1 9 0ZM18.75 10.5h.008v.008h-.008V10.5Z"
               />
             </svg>
-            <h2 className="text-yellow-800 text-lg capitalize font-bold">
+            <h2 className="text-yellow-800 text-lg capitalize font-bold md:text-xl">
               camera
             </h2>
           </div>
@@ -267,8 +270,7 @@ const CreatePost = () => {
                 viewBox="0 0 24 24"
                 stroke-width="1.5"
                 stroke="currentColor"
-                class="size-5 text-yellow-800"
-                
+                class="size-5 text-yellow-800 md:size-8"
               >
                 <path
                   stroke-linecap="round"
@@ -277,10 +279,7 @@ const CreatePost = () => {
                 />
               </svg>
             </span>
-            <h2
-              className="text-yellow-800 text-lg capitalize font-bold"
-              
-            >
+            <h2 className="text-yellow-800 text-lg capitalize font-bold md:text-xl">
               image / video
             </h2>
           </div>
@@ -292,7 +291,7 @@ const CreatePost = () => {
               viewBox="0 0 24 24"
               stroke-width="1.5"
               stroke="currentColor"
-              class="size-5 text-yellow-800"
+              class="size-5 text-yellow-800 md:size-8"
             >
               <path
                 stroke-linecap="round"
@@ -305,7 +304,7 @@ const CreatePost = () => {
                 d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1 1 15 0Z"
               />
             </svg>
-            <h2 className="text-yellow-800 text-lg capitalize font-bold">
+            <h2 className="text-yellow-800 text-lg capitalize font-bold md:text-xl">
               location
             </h2>
           </div>

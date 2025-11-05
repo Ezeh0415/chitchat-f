@@ -23,38 +23,37 @@ const Dashboard = () => {
   } = useMyContext();
   const navigate = useNavigate();
   const bottomRef = React.useRef(null);
+  const [pageLoader, setPageLoader] = React.useState(false);
 
   const { mySuccess, user } = userProfile || {};
-  const { totalCount, data } = posts || {};
+  const { totalCount, totalPages, currentPage, data } = posts || {};
   const { FriendRequest, Friends } = user || {};
 
-  React.useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        if (entries[0].isIntersecting) {
-          setLimit((prev) => prev + 5);
-        }
-      },
-      { threshold: 1.0 }
-    );
+  // ...existing code...
 
-    if (bottomRef.current) observer.observe(bottomRef.current);
+  React.useEffect(() => {
+    const container = bottomRef.current;
+    if (!container) return;
+
+    const onScroll = () => {
+      // When container scroll reaches (or is within 5px of) the bottom
+      if (
+        container.scrollTop + container.clientHeight >=
+        container.scrollHeight - 5
+      ) {
+        setLimit((prevLimit) => prevLimit + 5);
+        setPageLoader(true);
+      }
+    };
+
+    container.addEventListener("scroll", onScroll);
 
     return () => {
-      if (bottomRef.current) observer.unobserve(bottomRef.current);
+      container.removeEventListener("scroll", onScroll);
+      setPageLoader(false);
     };
-  }, []);
-
-  // React.useEffect(() => {
-  //   if (bottomRef.current) {
-  //     console.log("reached");
-  //     setLimit((prevLimit) => prevLimit + 5);
-  //   }
-  // }, [bottomRef]);
-
-  // console.log(user);
-
-  // console.log(user,data);
+  }, [bottomRef, data]);
+  // ...existing code...
 
   return (
     <div>
@@ -76,7 +75,7 @@ const Dashboard = () => {
 
         <section className="mt-[0.5rem]">
           <div>
-            <span className="flex items-center gap-2 ">
+            <span className="flex items-center gap-2  lg:shadow-md lg:p-2">
               <Link to="/profile">
                 <img
                   src={
@@ -140,8 +139,11 @@ const Dashboard = () => {
           )}
 
           {data && data?.length > 0 ? (
-            <div>
-              {data.map((posts) => {
+            <div
+              ref={bottomRef}
+              style={{ overflowY: "auto", maxHeight: "86vh" }}
+            >
+              {data?.map((posts) => {
                 const result = formatDistanceToNowStrict(
                   new Date(`${posts.createdAt}`),
                   {
@@ -165,7 +167,7 @@ const Dashboard = () => {
                       className={
                         posts.email === user.email
                           ? "flex items-center  gap-2 mt-6"
-                          : "flex items-center justify-between gap-2 mt-6"
+                          : "flex items-center justify-between gap-2 mt-6 md:justify-start md:gap-4"
                       }
                       key={posts._id}
                     >
@@ -183,7 +185,7 @@ const Dashboard = () => {
                                 : "userName"
                             }
                             loading="lazy"
-                            className="w-[25px] h-[25px] rounded-full"
+                            className="w-[25px] h-[25px] rounded-full md:w-[40px] md:h-[40px]  "
                           />
                         </Link>
                       ) : (
@@ -199,7 +201,7 @@ const Dashboard = () => {
                             alt={posts.firstName}
                             src={posts.profileImage}
                             loading="lazy"
-                            className="w-[25px] h-[25px] rounded-full"
+                            className="w-[25px] h-[25px] rounded-full md:w-[40px] md:h-[40px]  "
                           />
                         </button>
                       )}
@@ -208,10 +210,16 @@ const Dashboard = () => {
                         {posts.email === user.email ? (
                           <Link
                             to={`/profile`}
-                            className="flex items-center gap-1 capitalize border-r px-1 "
+                            className="flex items-center gap-1 capitalize border-r px-1 md:text-lg"
                           >
-                            <h2 className="text-xs"> {posts.firstName} </h2>
-                            <h2 className="text-xs"> {posts.lastName} </h2>
+                            <h2 className="text-xs md:text-lg">
+                              {" "}
+                              {posts.firstName}{" "}
+                            </h2>
+                            <h2 className="text-xs md:text-lg">
+                              {" "}
+                              {posts.lastName}{" "}
+                            </h2>
                           </Link>
                         ) : (
                           <button
@@ -221,10 +229,16 @@ const Dashboard = () => {
                                 navigate("/UserProfile");
                               }, 1500);
                             }}
-                            className="flex items-center gap-1 capitalize border-r px-1"
+                            className="flex items-center gap-1 capitalize border-r px-1 md:text-lg"
                           >
-                            <h2 className="text-xs"> {posts.firstName} </h2>
-                            <h2 className="text-xs"> {posts.lastName} </h2>
+                            <h2 className="text-xs md:text-lg">
+                              {" "}
+                              {posts.firstName}{" "}
+                            </h2>
+                            <h2 className="text-xs md:text-lg">
+                              {" "}
+                              {posts.lastName}{" "}
+                            </h2>
                           </button>
                         )}
                         <p className="text-xs"> {result} </p>
@@ -384,7 +398,17 @@ const Dashboard = () => {
                   </main>
                 );
               })}
-              <div ref={bottomRef} style={{ height: "1px" }} />
+              {pageLoader && (
+                <div className="flex flex-col items-center gap-4 mt-6 animate-fade-in text-gray-700">
+                  {/* Bigger Spinner */}
+                  <div className="w-12 h-12 border-8 border-t-blue-500 border-gray-300 rounded-full animate-spin"></div>
+
+                  {/* Bigger Loading text */}
+                  <p className="text-lg font-semibold animate-pulse">
+                    Loading more posts...
+                  </p>
+                </div>
+              )}
             </div>
           ) : (
             <div className="flex flex-col items-center justify-center mt-16 animate-fade-in">

@@ -23,6 +23,7 @@ const Header = () => {
   return (
     <div>
       <header className="flex items-center justify-between">
+
         <Link to="/" className="w-[20%] md:w-[10%]">
           <img src="logo/8025530.jpg" alt="chitchat logo" />
         </Link>
@@ -100,7 +101,7 @@ const Header = () => {
               viewBox="0 0 24 24"
               stroke-width="1.5"
               stroke="currentColor"
-              class="size-5 md:size-8"
+              class="size-5 md:size-8 block md:hidden"
             >
               <path
                 stroke-linecap="round"
@@ -109,7 +110,7 @@ const Header = () => {
               />
             </svg>
 
-            <h2 className="text-xs md:text-lg">message</h2>
+            <h2 className="text-xs md:text-lg block md:hidden">message</h2>
           </NavLink>
 
           <Link to="/profile" className="w-[35px] h-[35px] rounded-full">

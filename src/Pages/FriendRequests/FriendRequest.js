@@ -46,7 +46,7 @@ const FriendRequest = () => {
             viewBox="0 0 24 24"
             stroke-width="1.5"
             stroke="currentColor"
-            class="size-5 mt-1"
+            class="size-5 mt-1 md:size-6 cursor-pointer md:mt-0"
             onClick={() => navigate(-1)}
           >
             <path
@@ -55,7 +55,7 @@ const FriendRequest = () => {
               d="M12 9.75 14.25 12m0 0 2.25 2.25M14.25 12l2.25-2.25M14.25 12 12 14.25m-2.58 4.92-6.374-6.375a1.125 1.125 0 0 1 0-1.59L9.42 4.83c.21-.211.497-.33.795-.33H19.5a2.25 2.25 0 0 1 2.25 2.25v10.5a2.25 2.25 0 0 1-2.25 2.25h-9.284c-.298 0-.585-.119-.795-.33Z"
             />
           </svg>
-          <h1 className="text-xl capitalize ">Friend requests</h1>
+          <h1 className="text-xl capitalize md:text-2xl">Friend requests</h1>
         </div>
 
         {FriendRequest && FriendRequest.length > 0 ? (
@@ -74,22 +74,22 @@ const FriendRequest = () => {
                         : "logo/premium_photo-1673002094195-f18084be89ce.avif"
                     }
                     alt={user.firstName}
-                    className="w-[55px] h-[55px] rounded-md"
+                    className="w-[55px] h-[55px] rounded-md md:w-[70px] md:h-[70px]"
                   />
                   <div>
-                    <span className="flex items-center gap-2 capitalize">
+                    <span className="flex items-center gap-2 capitalize md:text-xl">
                       <h1>{user.firstName}</h1>
                       <h1>{user.lastName}</h1>
                     </span>
                     <span className="flex items-center gap-5 mt-1 capitalize">
                       <h3
-                        className="border px-2 rounded-md"
+                        className="border px-2 rounded-md md:text-lg"
                         onClick={() => handleDeleteFriendRequests(user._id)}
                       >
                         decline
                       </h3>
                       <h3
-                        className="border px-2 rounded-md"
+                        className="border px-2 rounded-md md:text-lg"
                         onClick={() =>
                           handleAcceptFriends(user._id, user.email)
                         }
@@ -119,7 +119,9 @@ const FriendRequest = () => {
                   d="M8 10h.01M12 14h.01M16 10h.01M12 2a10 10 0 100 20 10 10 0 000-20z"
                 />
               </svg>
-              <p className="text-lg font-semibold">No Friend Requests</p>
+              <p className="text-lg font-semibold md:text-2xl">
+                No Friend Requests
+              </p>
               <p className="mt-2 text-sm text-gray-400">
                 You currently have no new friend requests.
               </p>
@@ -128,7 +130,9 @@ const FriendRequest = () => {
         )}
       </section>
       <section>
-        <h1 className="text-xl capitalize mt-4">active users</h1>
+        <h1 className="text-xl capitalize mt-4 md:text-3xl md:mb-4">
+          active users
+        </h1>
         {data && data.length > 0 ? (
           <div>
             {data.map((user) => {
@@ -153,10 +157,10 @@ const FriendRequest = () => {
                             : "logo/premium_photo-1673002094195-f18084be89ce.avif"
                         }
                         alt={firstName}
-                        className="w-[55px] h-[55px] rounded-md"
+                        className="w-[55px] h-[55px] rounded-md md:w-[70px] md:h-[70px]"
                       />
                       <div>
-                        <span className="flex items-center gap-2 capitalize">
+                        <span className="flex items-center gap-2 capitalize md:text-xl">
                           <h1>{firstName}</h1>
                           <h1>{lastName}</h1>
                         </span>
@@ -170,7 +174,7 @@ const FriendRequest = () => {
                             </h3>
                           ) : (
                             <h3
-                              className="border px-2 rounded-md cursor-pointer"
+                              className="border px-2 rounded-md cursor-pointer md:text-lg"
                               onClick={() => handleAddFriends(email)}
                             >
                               connect

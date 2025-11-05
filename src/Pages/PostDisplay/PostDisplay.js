@@ -12,8 +12,11 @@ const PostDisplay = () => {
     handleComment,
     postDisplay,
     handlePostDisplay,
+    userProfile,
   } = useMyContext();
   const navigate = useNavigate();
+
+  const { mySuccess, user } = userProfile || {};
   const post = postDisplay?.post;
 
   const date = new Date(postDisplay?.post.createdAt);
@@ -58,7 +61,7 @@ const PostDisplay = () => {
   };
 
   return (
-    <div className="relative min-h-screen">
+    <div className="relative min-h-[94vh]">
       {loading ? (
         <div>
           {/* Main scrollable area */}
@@ -134,25 +137,25 @@ const PostDisplay = () => {
                       : "https://via.placeholder.com/48"
                   }
                   alt={post && post.firstName ? post.firstName : "userName"}
-                  className="w-12 h-12 rounded-full object-cover"
+                  className="w-12 h-12 rounded-full object-cover md:w-16 md:h-16"
                 />
                 <div className="ml-4">
-                  <h2 className="text-sm font-semibold text-gray-900">
+                  <h2 className="text-sm font-semibold text-gray-900 md:text-lg">
                     {post && post.firstName ? post.firstName : "firstName"}{" "}
                     {post && post.lastName ? post.lastName : "lastName"}
                   </h2>
-                  <p className="text-xs text-gray-500">{formattedDate}</p>
+                  <p className="text-xs text-gray-500 md:text-lg">
+                    {formattedDate}
+                  </p>
                 </div>
               </div>
 
               {/* Content */}
               <div className="px-5 py-4">
-                <p className="text-sm text-gray-800 mb-4 leading-relaxed">
+                <p className="text-sm text-gray-800 mb-4 leading-relaxed md:text-lg capitalized">
                   {post && post.postText
                     ? post.postText
-                    : ` This is a detailed and professional-looking post. It's styled
-                  with spacing and simplicity in mind — clean layout without
-                  distracting colors.`}
+                    : ` `}
                 </p>
                 {post && post.mediaUrl ? (
                   <img
@@ -173,26 +176,28 @@ const PostDisplay = () => {
 
             {/* Comments */}
             <div className="mt-6 space-y-4">
-              <h3 className="text-sm font-semibold text-gray-700">Comments</h3>
+              <h3 className="text-sm font-semibold text-gray-700 md:text-lg mb-4">
+                Comments
+              </h3>
               {[...(post?.comments || [])].reverse().map((c) => (
                 <div key={c.id} className="flex items-start space-x-1.5 mb-6">
                   <img
                     src={c?.profileImage || "https://via.placeholder.com/48"}
                     alt={c?.firstName || "User"}
-                    className="w-10 h-10 rounded-full object-cover border border-gray-300"
+                    className="w-10 h-10 rounded-full object-cover border border-gray-300 md:w-12 md:h-12"
                   />
                   <div className="border border-gray-300 rounded-lg px-5 py-3 bg-white shadow-md w-full">
                     <div className="flex items-center justify-between mb-2">
-                      <h2 className="font-semibold text-gray-900 text-base">
+                      <h2 className="font-semibold text-gray-900 text-base md:text-lg">
                         {c?.firstName} {c?.lastName}
                       </h2>
-                      <small className="text-gray-500 text-xs">
+                      <small className="text-gray-500 text-xs text-right md:text-sm">
                         {formatDistanceToNowStrict(new Date(c?.createdAt), {
                           addSuffix: true,
                         })}
                       </small>
                     </div>
-                    <p className="text-gray-700 text-sm leading-relaxed">
+                    <p className="text-gray-700 text-sm leading-relaxed md:text-base">
                       {c?.commentText}
                     </p>
                   </div>
@@ -202,26 +207,26 @@ const PostDisplay = () => {
           </div>
 
           {/* Fixed Comment Input at Bottom */}
-          <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200">
+          <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 md:absolute md:bottom-0 md:left-auto md:right-auto md:w-full ">
             <div className="max-w-2xl mx-auto px-4 py-3 flex items-center space-x-1.5">
               <img
                 src={
-                  post && post.profileImage
-                    ? post.profileImage
+                  user && user?.profileImage
+                    ? user.profileImage
                     : "https://via.placeholder.com/48"
                 }
-                alt={post && post.firstName ? post.firstName : "userName"}
-                className="w-12 h-12 rounded-full object-cover"
+                alt={user && user.firstName ? user.firstName : "userName"}
+                className="w-12 h-12 rounded-full object-cover md:w-14 md:h-14"
               />
               <input
                 type="text"
                 placeholder="Add a comment..."
                 value={commentText}
                 onChange={handleCommentChange}
-                className="flex-1 border border-gray-300 rounded-full px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="flex-1 border border-gray-300 rounded-full px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 md:text-base"
               />
               <button
-                className="text-sm px-4 py-1.5 rounded-full bg-yellow-900 text-white hover:bg-blue-700 transition"
+                className="text-sm px-4 py-1.5 rounded-full bg-yellow-900 text-white hover:bg-blue-700 transition md:text-lg"
                 onClick={() => {
                   handleComment(post.email, post._id, commentText);
                   handleRerunPostDisplay();
