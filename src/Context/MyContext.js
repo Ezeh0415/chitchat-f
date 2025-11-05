@@ -40,6 +40,7 @@ export function MyContextProvider({ children }) {
   const [Chat, setChat] = React.useState([]);
   const [refreshChat, setRefreshChat] = React.useState(false);
   const [limit, setLimit] = React.useState(5);
+  const [Token, setToken] = React.useState("");
   const storedUser = localStorage.getItem("user");
   const users = JSON.parse(storedUser);
   const { email } = users || {};
@@ -237,7 +238,7 @@ export function MyContextProvider({ children }) {
       const [signup] = results || [];
 
       if (signup?.success) {
-        localStorage.setItem("Token", signup.accessToken);
+        setToken(signup.accessToken);
         localStorage.setItem("user", JSON.stringify(signup.user));
         setError(false);
         setLoading(false);
@@ -245,7 +246,7 @@ export function MyContextProvider({ children }) {
         setMessage(`${signup.message}! Redirecting in 2 seconds...`);
 
         setTimeout(() => {
-          navigate("/");
+          navigate("/profileSetup");
           setMessage("");
         }, 3000);
       } else {
@@ -348,6 +349,7 @@ export function MyContextProvider({ children }) {
   const handleLogout = async () => {
     localStorage.removeItem("Token");
     localStorage.removeItem("user");
+    navigate("/signin");
     try {
       const requests = [
         {
@@ -1266,6 +1268,7 @@ export function MyContextProvider({ children }) {
         posts,
         Users,
         email,
+        Token,
         limit,
         setLimit,
         // fetch request section end
@@ -1289,6 +1292,12 @@ export function MyContextProvider({ children }) {
         error,
         message,
         success,
+
+        setError,
+        setLoading,
+        setMessage,
+        setSuccess,
+        navigate,
         // error success message section end
 
         // sign up login and logout section start

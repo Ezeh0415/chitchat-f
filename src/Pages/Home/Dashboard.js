@@ -75,7 +75,7 @@ const Dashboard = () => {
 
         <section className="mt-[0.5rem]">
           <div>
-            <span className="flex items-center gap-2 ">
+            <span className="flex items-center gap-2  lg:shadow-md lg:p-2">
               <Link to="/profile">
                 <img
                   src={

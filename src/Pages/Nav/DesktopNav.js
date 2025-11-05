@@ -80,9 +80,12 @@ const DesktopNav = () => {
               Add Friends
             </button>
 
-            <button className="flex items-center text-gray-600 hover:text-purple-600 transition-colors ">
+            <Link
+              to="/notification"
+              className="flex items-center text-gray-600 hover:text-purple-600 transition-colors "
+            >
               <svg
-                className="w-5 h-5 mr-3"
+                className={`w-5 h-5 mr-3 ${unreadCount ? "bounce" : ""} `}
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -99,15 +102,18 @@ const DesktopNav = () => {
                  notification
               </span> */}
                 <span className="flex gap-1">
-                  <h2>Notification</h2> <small>{unreadCount}</small>
+                  <h2>Notification</h2>{" "}
+                  <small className={unreadCount ? "text-red-700" : "hidden"}>
+                    {unreadCount}
+                  </small>
                 </span>
               </div>
-            </button>
+            </Link>
           </div>
         </div>
       </div>
 
-      <div className="absolute bottom-2 space-y-4">
+      <div className="absolute bottom-4 space-y-4">
         <div className="flex items-center gap-2">
           <Link to="/profile" className="w-[25%] h-[20%] rounded-full">
             <img

@@ -21,7 +21,6 @@ const ProfilePage = () => {
 
   const { mysuccess, user } = userProfile || {};
 
-
   const location = useLocation();
   const isEditing = location.pathname.includes("editProfile");
   const navigate = useNavigate();
@@ -32,20 +31,20 @@ const ProfilePage = () => {
 
   // 3. Main Profile Card Component
   const formattedDOB =
-    user?.dob &&
-    new Date(user.dob).toLocaleDateString("en-US", {
+    user?.Dob &&
+    new Date(user.Dob).toLocaleDateString("en-US", {
       year: "numeric",
-      month: "long",
+      month: "short",
       day: "numeric",
     });
 
-  const age = user?.dob ? calculateAge(user.dob) : null;
+  const age = user?.Dob ? calculateAge(user.Dob) : null;
 
   const date = new Date(user?.createdAt);
 
   const options = {
     year: "numeric",
-    month: "long", // full month name
+    month: "short", // full month name
     day: "numeric",
     // hour: "numeric",
     // minute: "2-digit",
@@ -63,7 +62,9 @@ const ProfilePage = () => {
 
     </div> */}
       {/* nav bar section */}
-      <Navbar />
+      <div className="block lg:hidden">
+        <Navbar />
+      </div>
 
       {/* logout model */}
       <LogoutModel />
@@ -115,22 +116,24 @@ const ProfilePage = () => {
                   />
 
                   <UserInfoRow
-                    icon="📍"
+                    icon="🧭"
                     label="Location"
-                    value={user?.location}
+                    value={user?.firstName && `@${user?.country}`}
                   />
+
                   <UserInfoRow
                     icon="🎂"
                     label="Birthday"
                     value={formattedDOB && `${formattedDOB} (${age} years old)`}
                   />
+
                   <p className="text-sm text-green-600 font-medium mt-1">
                     {isOnline ? "🟢 Online" : "🔴 Offline"}
                   </p>
 
                   {/* Bio */}
                   <p className="mt-3 text-gray-600 text-base leading-relaxed">
-                    {user?.bio ||
+                    {user?.Bio ||
                       "“Just here to connect, share ideas, and learn 🌱.”"}
                   </p>
 

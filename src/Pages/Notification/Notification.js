@@ -21,7 +21,9 @@ const NotificationPage = () => {
 
   return (
     <section>
-      <Navbar />
+      <div className="block lg:hidden">
+        <Navbar />
+      </div>
       <LogoutModel />
       <div className=" py-1 flex justify-center">
         <div className="w-full max-w-2xl  rounded-lg  p-2">

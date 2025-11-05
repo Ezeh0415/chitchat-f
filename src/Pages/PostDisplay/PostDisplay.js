@@ -12,8 +12,11 @@ const PostDisplay = () => {
     handleComment,
     postDisplay,
     handlePostDisplay,
+    userProfile,
   } = useMyContext();
   const navigate = useNavigate();
+
+  const { mySuccess, user } = userProfile || {};
   const post = postDisplay?.post;
 
   const date = new Date(postDisplay?.post.createdAt);
@@ -152,9 +155,7 @@ const PostDisplay = () => {
                 <p className="text-sm text-gray-800 mb-4 leading-relaxed md:text-lg capitalized">
                   {post && post.postText
                     ? post.postText
-                    : ` This is a detailed and professional-looking post. It's styled
-                  with spacing and simplicity in mind — clean layout without
-                  distracting colors.`}
+                    : ` `}
                 </p>
                 {post && post.mediaUrl ? (
                   <img
@@ -210,11 +211,11 @@ const PostDisplay = () => {
             <div className="max-w-2xl mx-auto px-4 py-3 flex items-center space-x-1.5">
               <img
                 src={
-                  post && post.profileImage
-                    ? post.profileImage
+                  user && user?.profileImage
+                    ? user.profileImage
                     : "https://via.placeholder.com/48"
                 }
-                alt={post && post.firstName ? post.firstName : "userName"}
+                alt={user && user.firstName ? user.firstName : "userName"}
                 className="w-12 h-12 rounded-full object-cover md:w-14 md:h-14"
               />
               <input
