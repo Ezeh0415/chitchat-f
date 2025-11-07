@@ -60,53 +60,56 @@ const MessageFriends = () => {
       <div>
         <h1 className="text-xl capitalize mt-4">chats</h1>
 
-        {user.Friends.map((friend) => {
-          const lastChat = friend.chats[friend.chats.length - 1];
-          // const lastsChat = Chat[Chat.length - 1];
-          // console.log("lastsChat", lastsChat);
+        {user &&
+          user?.Friends.map((friend) => {
+            // safely get last chat
+            const chats = Array.isArray(friend?.chats) ? friend.chats : [];
+            const lastChat = chats.length > 0 ? chats[chats.length - 1] : null;
 
-          return (
-            <section
-              key={friend._id || friend.email}
-              onClick={() => {
-                handleChatRoom(friend.email, friend._id);
-                handleGetChat(friend._id);
-                socket.emit("joinRoom", friend._id);
-              }}
-            >
-              <div className="mt-3 flex items-center gap-3">
-                <img
-                  src={
-                    friend.profileImage
-                      ? friend.profileImage
-                      : "logo/premium_photo-1673002094195-f18084be89ce.avif"
-                  }
-                  alt={friend.firstName}
-                  className="w-[55px] h-[55px] rounded-md"
-                />
-                <div>
-                  <span className="flex items-center gap-2 capitalize">
-                    <h1>{friend.firstName}</h1>
-                    <h1>{friend.lastName}</h1>
-                  </span>
+            
+
+            return (
+              <section
+                key={friend._id || friend.email}
+                onClick={() => {
+                  handleChatRoom(friend.email, friend._id);
+                  handleGetChat(friend._id);
+                  socket.emit("joinRoom", friend._id);
+                }}
+              >
+                <div className="mt-3 flex items-center gap-3">
+                  <img
+                    src={
+                      friend.profileImage
+                        ? friend.profileImage
+                        : "logo/premium_photo-1673002094195-f18084be89ce.avif"
+                    }
+                    alt={friend.firstName}
+                    className="w-[55px] h-[55px] rounded-md"
+                  />
                   <div>
-                    <p className="text-gray-600 truncate">
-                      {lastChat?.message || "No message yet"}
-                    </p>
-                    <p className="text-xs text-gray-400">
-                      {lastChat
-                        ? new Date(lastChat.timestamp).toLocaleString([], {
-                            hour: "2-digit",
-                            minute: "2-digit",
-                          })
-                        : ""}
-                    </p>
+                    <span className="flex items-center gap-2 capitalize">
+                      <h1>{friend.firstName}</h1>
+                      <h1>{friend.lastName}</h1>
+                    </span>
+                    <div>
+                      <p className="text-gray-600 truncate">
+                        {lastChat?.message || "No message yet"}
+                      </p>
+                      <p className="text-xs text-gray-400">
+                        {lastChat
+                          ? new Date(lastChat.timestamp).toLocaleString([], {
+                              hour: "2-digit",
+                              minute: "2-digit",
+                            })
+                          : ""}
+                      </p>
+                    </div>
                   </div>
                 </div>
-              </div>
-            </section>
-          );
-        })}
+              </section>
+            );
+          })}
       </div>
     </section>
   );

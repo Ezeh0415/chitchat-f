@@ -48,6 +48,8 @@ export function MyContextProvider({ children }) {
   // function to handle multiple requests
   const [userProfile, posts, Users] = result || [];
 
+  
+
   // check if user is authenticated
   const isAuthenticated = !!localStorage.getItem("Token");
 
