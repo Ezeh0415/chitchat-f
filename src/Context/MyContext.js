@@ -12,7 +12,11 @@ import {
 } from "@headlessui/react";
 import { ExclamationTriangleIcon } from "@heroicons/react/24/outline";
 import { io } from "socket.io-client";
-const socket = io(`${Base_Url}`); // replace with your server URL
+const socket = io(Base_Url, {
+  withCredentials: true,
+  transports: ["websocket"],
+});
+// replace with your server URL
 // 1. Create the context
 const MyContext = createContext();
 
