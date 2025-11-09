@@ -17,6 +17,8 @@ const FriendRequest = () => {
   const { mySuccess, user } = userProfile || {};
   const { FriendRequest, Friends } = user || {};
 
+  console.log(FriendRequest);
+
   if (loading) {
     return (
       <div>
