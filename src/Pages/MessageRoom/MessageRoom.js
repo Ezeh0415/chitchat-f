@@ -45,7 +45,7 @@ const MessagePage = () => {
   }, [messages, bottomRef]);
 
   return (
-    <div className="flex flex-col h-[89vh] bg-yellow-50 md:h-[94vh]">
+    <div className="flex flex-col h-[89vh] bg-yellow-50 md:h-[94vh] md:mt-[1rem]">
       {/* Header */}
       <div>
         <svg
