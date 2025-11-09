@@ -109,7 +109,7 @@ const Login = () => {
               <input
                 id="password"
                 name="password"
-                type={showPassword ? "text" : "password"}
+                type={showPassword ? "password" : "text"}
                 value={formData.password}
                 onChange={handleChange}
                 required
@@ -122,7 +122,7 @@ const Login = () => {
                 className="px-3 text-gray-500 dark:text-gray-300"
                 onClick={() => setShowPassword(!showPassword)}
               >
-                {showPassword ? (
+                {!showPassword ? (
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     fill="none"

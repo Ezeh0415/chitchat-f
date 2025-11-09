@@ -97,13 +97,14 @@ const MessagePage = () => {
         ) : (
           <div>
             {Array.isArray(Chat) &&
-              Chat.map((msg) => {
+              Chat.filter((msg) => msg && msg.to && msg.message).map((msg) => {
                 const isOwn =
-                  msg.to.trim().toLowerCase() === email.trim().toLowerCase();
+                  msg.to.toString().trim().toLowerCase() ===
+                  email?.toString().trim().toLowerCase();
 
                 return (
                   <div
-                    key={msg._id}
+                    key={msg._id || Date.now()}
                     className={`flex flex-col py-2 ${
                       isOwn ? "items-end" : "items-start"
                     }`}
@@ -111,17 +112,18 @@ const MessagePage = () => {
                     <div
                       className={`break-words px-3 py-2 rounded-lg max-w-[70%] ${
                         isOwn
-                          ? "bg-yellow-200 border border-yellow-600 text-gray-800" // your messages (left)
-                          : "bg-white border border-gray-300 text-gray-800" // others' messages (right)
+                          ? "bg-yellow-200 border border-yellow-600 text-gray-800"
+                          : "bg-white border border-gray-300 text-gray-800"
                       }`}
                     >
-                      <span className="flex flex-col gap-1 ">
+                      <span className="flex flex-col gap-1">
                         {msg.message}
-                        <p className="break-words text-xs text-gray-500  ">
-                          {new Date(msg.timestamp).toLocaleTimeString([], {
-                            hour: "2-digit",
-                            minute: "2-digit",
-                          })}
+                        <p className="break-words text-xs text-gray-500">
+                          {msg.timestamp &&
+                            new Date(msg.timestamp).toLocaleTimeString([], {
+                              hour: "2-digit",
+                              minute: "2-digit",
+                            })}
                         </p>
                       </span>
                     </div>

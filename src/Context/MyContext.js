@@ -1165,6 +1165,7 @@ export function MyContextProvider({ children }) {
       setMessage(error.message || "Failed to get user chat room");
     } finally {
       setMessage("");
+      socket.off("chatMessage");
       setChatInput("");
       setTimeout(() => {
         setError(false);
