@@ -466,7 +466,7 @@ export function MyContextProvider({ children }) {
     try {
       if (MediaUrl) {
         // Send all media uploads in parallel
-        const results = await Promise.all(
+        await Promise.all(
           MediaUrl.map(async (media) => {
             const { dataUrl } = media;
 
@@ -1242,7 +1242,7 @@ export function MyContextProvider({ children }) {
       window.removeEventListener("online", handleOnline);
       window.removeEventListener("offline", handleOffline);
     };
-  }, [navigator.onLine]);
+  }, []);
 
   // Fetch data when email becomes available
   React.useEffect(() => {

@@ -1,7 +1,7 @@
 import { Link, useNavigate } from "react-router-dom";
 import Navbar from "../Nav/Navbar";
 import { useMyContext } from "../../Context/MyContext";
-import React, { use } from "react";
+import React from "react";
 import { formatDistanceToNowStrict } from "date-fns";
 import LogoutModel from "../../utilites/LogoutModel";
 import Success from "../../utilites/Success";
@@ -18,7 +18,6 @@ const Dashboard = () => {
     handleGetUsersProfile,
     handleAddFriends,
     handlePostDisplay,
-    limit,
     setLimit,
   } = useMyContext();
   const navigate = useNavigate();
@@ -79,8 +78,8 @@ const Dashboard = () => {
               <Link to="/profile">
                 <img
                   src={
-                    user && user.profileImage
-                      ? user.profileImage
+                    user && user?.profileImage
+                      ? user?.profileImage
                       : "https://via.placeholder.com/48"
                   }
                   alt={user && user.firstName ? user.firstName : "userName"}
