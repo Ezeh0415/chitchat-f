@@ -21,6 +21,7 @@ import ScrollToTop from "./utilites/ScrollToTop";
 import PostDisplay from "./Pages/PostDisplay/PostDisplay";
 import DesktopNav from "./Pages/Nav/DesktopNav";
 import ProfileSetup from "./Pages/Authenteticator/ProfileSetup";
+import NotFound from "./Pages/404Page/404Page";
 
 function App() {
   const { hideNav, isAuthenticated, navOpen } = useMyContext();
@@ -37,7 +38,7 @@ function App() {
         // 🧱 Authenticated layout
         <div className="flex-1 grid md:grid-cols-12 gap-4 px-4 py-4 overflow-hidden ">
           {/* Left Sidebar */}
-          <aside className="hidden lg:block md:col-span-2 h-full ">
+          <aside className="hidden lg:block md:col-span-2 h-[95%] ">
             <div className="bg-white rounded shadow p-4 text-green-900 h-full">
               <Link to="/" className="w-[5%] mt-[-400px] ">
                 <img
@@ -132,6 +133,14 @@ function App() {
                 element={
                   <ProtectedRoute isAuthenticated={isAuthenticated}>
                     <PostDisplay />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="*"
+                element={
+                  <ProtectedRoute isAuthenticated={isAuthenticated}>
+                    <NotFound />
                   </ProtectedRoute>
                 }
               />

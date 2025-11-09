@@ -10,12 +10,19 @@ const DesktopNav = () => {
     ...(user?.FriendRequestsNotifications || []),
   ].filter((n) => !n.read).length;
 
+  const unreadFriends = [...(user?.FriendRequests || [])].filter(
+    (n) => !n.read
+  ).length;
+
   return (
-    <nav className=" mt-2 h-[88vh] relative">
+    <nav className=" mt-1 h-[88vh] relative">
       <div className="max-w-7xl mx-auto p-2">
         <div className="flex flex-col space-y-3 py-4">
           {/* Logo */}
-          <div className="text-xl font-bold text-purple-600 flex items-center">
+          <Link
+            to="/"
+            className="text-xl font-bold text-purple-600 flex items-center"
+          >
             <svg
               className="w-6 h-6 mr-2"
               fill="currentColor"
@@ -24,11 +31,14 @@ const DesktopNav = () => {
               <path d="M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z" />
             </svg>
             ChatApp
-          </div>
+          </Link>
 
           {/* Navigation Items */}
           <div className="flex flex-col space-y-6 capitalize">
-            <button className="flex items-center text-gray-600 hover:text-purple-600 transition-colors text-xl">
+            <Link
+              to="/groups"
+              className="flex items-center text-gray-600 hover:text-purple-600 transition-colors text-xl"
+            >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
@@ -44,9 +54,12 @@ const DesktopNav = () => {
                 />
               </svg>
               groups
-            </button>
+            </Link>
 
-            <button className="flex items-center text-gray-600 hover:text-purple-600 transition-colors text-xl">
+            <Link
+              to="/reels"
+              className="flex items-center text-gray-600 hover:text-purple-600 transition-colors text-xl"
+            >
               <svg
                 className="w-5 h-5 mr-3"
                 fill="none"
@@ -61,11 +74,14 @@ const DesktopNav = () => {
                 />
               </svg>
               Reels
-            </button>
+            </Link>
 
-            <button className="flex items-center text-gray-600 hover:text-purple-600 transition-colors text-lg">
+            <Link
+              to="/friends"
+              className="flex items-center text-gray-600 hover:text-purple-600 transition-colors text-lg"
+            >
               <svg
-                className="w-5 h-5 mr-3"
+                className={`w-5 h-5 mr-3 ${unreadFriends ? "bounce" : ""} `}
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -77,8 +93,15 @@ const DesktopNav = () => {
                   d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"
                 />
               </svg>
-              Add Friends
-            </button>
+              <div>
+                <span className="flex gap-1">
+                  <h2>add Friends</h2>{" "}
+                  <small className={unreadFriends ? "text-red-700" : "hidden"}>
+                    {unreadFriends}
+                  </small>
+                </span>
+              </div>
+            </Link>
 
             <Link
               to="/notification"
@@ -98,9 +121,6 @@ const DesktopNav = () => {
                 />
               </svg>
               <div>
-                {/* <span>
-                 notification
-              </span> */}
                 <span className="flex gap-1">
                   <h2>Notification</h2>{" "}
                   <small className={unreadCount ? "text-red-700" : "hidden"}>
@@ -113,7 +133,7 @@ const DesktopNav = () => {
         </div>
       </div>
 
-      <div className="absolute bottom-4 space-y-4">
+      <div className="absolute bottom-5 space-y-4">
         <div className="flex items-center gap-2">
           <Link to="/profile" className="w-[25%] h-[20%] rounded-full">
             <img
@@ -133,7 +153,7 @@ const DesktopNav = () => {
             </Link>
           </span>
         </div>
-        <div className="flex items-center gap-1">
+        <Link to="/setting" className="flex items-center gap-1">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
@@ -154,7 +174,7 @@ const DesktopNav = () => {
             />
           </svg>
           <h2 className="text-xl capitalize">settings</h2>
-        </div>
+        </Link>
         <div className="flex items-center gap-1">
           <svg
             xmlns="http://www.w3.org/2000/svg "
