@@ -1,4 +1,4 @@
-import { Link, Route, Routes, useNavigate } from "react-router-dom";
+import { Link, Route, Routes } from "react-router-dom";
 import "./App.css";
 import Signup from "./Pages/Authenteticator/Signup";
 import Login from "./Pages/Authenteticator/Login";
@@ -24,7 +24,7 @@ import ProfileSetup from "./Pages/Authenteticator/ProfileSetup";
 import NotFound from "./Pages/404Page/404Page";
 
 function App() {
-  const { hideNav, isAuthenticated, navOpen } = useMyContext();
+  const {  isAuthenticated, } = useMyContext();
 
   return (
     <div className="bg-yellow-50/50 h-screen flex flex-col">
