@@ -1,6 +1,6 @@
 import { ActiveUser } from "./Database";
 
-export const Base_Url = "http://localhost:8080";
+export const Base_Url = "chitchat-b-production.up.railway.app";
 
 export const fetchMultipleRequests = async (requests) => {
   const promises = requests.map(({ url, options }) => ActiveUser(url, options));
