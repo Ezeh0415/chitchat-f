@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useMyContext } from "../../Context/MyContext";
-import { Base_Url, fetchMultipleRequests } from "../../Db/Dburl";
+import { Base_Url } from "../../Db/Dburl";
 
 const ProfileSetup = () => {
   const {

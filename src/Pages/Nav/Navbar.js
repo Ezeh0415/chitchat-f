@@ -26,8 +26,7 @@ function classNames(...classes) {
 
 const Navbar = () => {
   const { setOpen, userProfile } = useMyContext();
-  const { success, user } = userProfile || {};
-
+  const { user } = userProfile || {};
 
   return (
     <Disclosure as="nav" className="relative text-black shadow-md">

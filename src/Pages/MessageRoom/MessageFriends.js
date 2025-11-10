@@ -1,9 +1,7 @@
 import React from "react";
 import Navbar from "../Nav/Navbar";
-import { Link } from "react-router-dom";
 import { useMyContext } from "../../Context/MyContext";
 import LogoutModel from "../../utilites/LogoutModel";
-import attachLastMessages from "../../utilites/AttachLastMessage";
 
 const MessageFriends = () => {
   const {
@@ -13,9 +11,8 @@ const MessageFriends = () => {
     handleChatRoom,
     handleGetChat,
     socket,
-    Chat,
   } = useMyContext();
-  const { mySuccess, user } = userProfile || {};
+  const {user } = userProfile || {};
 
   if (loading) {
     return <p>Loading friends...</p>;

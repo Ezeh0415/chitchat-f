@@ -11,12 +11,10 @@ const UserProfile = () => {
   const storedUser = localStorage.getItem("UsersProfile");
   const users = JSON.parse(storedUser);
 
-  const { mysuccess, user } = users || {};
-  const { mySuccess, user: myUser } = userProfile || {};
+  const { user } = users || {};
+  const { user: myUser } = userProfile || {};
 
   // console.log("User Profile in ProfilePage:", user);
-
-  const postCount = user && user.posts ? user.posts.length : 0;
 
   const isFriends = Array.isArray(myUser?.Friends)
     ? myUser.Friends.find((friend) => friend.email === user.email)

@@ -13,11 +13,9 @@ const FriendRequest = () => {
     loading,
   } = useMyContext();
 
-  const { totalCount, data } = Users || [];
-  const { mySuccess, user } = userProfile || {};
+  const { data } = Users || [];
+  const { user } = userProfile || {};
   const { FriendRequest, Friends } = user || {};
-
-  console.log(FriendRequest);
 
   if (loading) {
     return (
@@ -63,10 +61,6 @@ const FriendRequest = () => {
         {FriendRequest && FriendRequest.length > 0 ? (
           <div>
             {FriendRequest.map((user) => {
-              const alreadyRequested =
-                Array.isArray(Friends) &&
-                Friends.some((req) => req.email === user.email);
-
               return (
                 <div key={user._id} className="mt-3 flex gap-3">
                   <img

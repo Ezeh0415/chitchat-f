@@ -1,7 +1,6 @@
 import React from "react";
 import Navbar from "../Nav/Navbar";
 import { useMyContext } from "../../Context/MyContext";
-import Model from "../../utilites/Model";
 import { formatDistanceToNowStrict } from "date-fns";
 import LogoutModel from "../../utilites/LogoutModel";
 import Success from "../../utilites/Success";
@@ -19,7 +18,7 @@ const ProfilePage = () => {
     isOnline,
   } = useMyContext();
 
-  const { mysuccess, user } = userProfile || {};
+  const { user } = userProfile || {};
 
   const location = useLocation();
   const isEditing = location.pathname.includes("editProfile");

@@ -16,7 +16,7 @@ const PostDisplay = () => {
   } = useMyContext();
   const navigate = useNavigate();
 
-  const { mySuccess, user } = userProfile || {};
+  const { user } = userProfile || {};
   const post = postDisplay?.post;
 
   const date = new Date(postDisplay?.post.createdAt);
@@ -52,7 +52,7 @@ const PostDisplay = () => {
       behavior: "smooth",
     });
     handlePostDisplay(Email, post_id);
-  }, [postDisplay, Email, post_id]);
+  }, [postDisplay, Email, post_id, handlePostDisplay]);
 
   const handleRerunPostDisplay = () => {
     setTimeout(() => {
@@ -153,9 +153,7 @@ const PostDisplay = () => {
               {/* Content */}
               <div className="px-5 py-4">
                 <p className="text-sm text-gray-800 mb-4 leading-relaxed md:text-lg capitalized">
-                  {post && post.postText
-                    ? post.postText
-                    : ` `}
+                  {post && post.postText ? post.postText : ` `}
                 </p>
                 {post && post.mediaUrl ? (
                   <img

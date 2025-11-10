@@ -4,7 +4,7 @@ import { useMyContext } from "../../Context/MyContext";
 
 const Header = () => {
   const { userProfile } = useMyContext();
-  const { mySuccess, user } = userProfile || {};
+  const { user } = userProfile || {};
   // const readValues = notifications.map((notification) => notification.read);
 
   // console.log(readValues);
@@ -23,7 +23,6 @@ const Header = () => {
   return (
     <div>
       <header className="flex items-center justify-between">
-
         <Link to="/" className="w-[20%] md:w-[10%]">
           <img src="logo/8025530.jpg" alt="chitchat logo" />
         </Link>
@@ -116,7 +115,7 @@ const Header = () => {
           <Link to="/profile" className="w-[35px] h-[35px] rounded-full">
             <img
               src="logo/premium_photo-1673002094195-f18084be89ce.avif"
-              alt="live random image"
+              alt="live random "
               className="w-[35px] h-[35px] rounded-full md:w-[55px] md:h-[35px]"
             />
           </Link>

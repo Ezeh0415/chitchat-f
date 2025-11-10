@@ -1,5 +1,3 @@
-import React from "react";
-import Navbar from "../Nav/Navbar";
 import { useNavigate } from "react-router-dom";
 import { useMyContext } from "../../Context/MyContext";
 import Model from "../../utilites/Model";
@@ -12,7 +10,7 @@ const EditProfilePage = () => {
     setModalOpen,
     userProfile,
   } = useMyContext();
-  const { mysuccess, user } = userProfile || {};
+  const { user } = userProfile || {};
   const navigate = useNavigate();
   return (
     <main className=" bg-gray-100">

@@ -68,42 +68,6 @@ export function MyContextProvider({ children }) {
     });
   };
 
-  const requests = [
-    {
-      url: `${Base_Url}/api/getUserProfile/${email}`,
-      options: {
-        method: "GET",
-        headers: {
-          Authorization: "Bearer your_token_here",
-          Accept: "application/json",
-        },
-      },
-    },
-
-    {
-      url: `${Base_Url}/api/posts?limit=${limit}`,
-      options: {
-        method: "GET",
-        headers: {
-          Authorization: "Bearer your_token_here",
-          Accept: "application/json",
-        },
-      },
-    },
-    {
-      url: `${Base_Url}/api/users`,
-      options: {
-        method: "GET",
-        headers: {
-          Authorization: "Bearer your_token_here",
-          Accept: "application/json",
-        },
-      },
-    },
-
-    // add more requests as needed
-  ];
-
   const handleChange = (e) => {
     setFormData({
       ...formData,
@@ -1247,6 +1211,42 @@ export function MyContextProvider({ children }) {
   // Fetch data when email becomes available
   React.useEffect(() => {
     if (!email) return;
+
+    const requests = [
+      {
+        url: `${Base_Url}/api/getUserProfile/${email}`,
+        options: {
+          method: "GET",
+          headers: {
+            Authorization: "Bearer your_token_here",
+            Accept: "application/json",
+          },
+        },
+      },
+
+      {
+        url: `${Base_Url}/api/posts?limit=${limit}`,
+        options: {
+          method: "GET",
+          headers: {
+            Authorization: "Bearer your_token_here",
+            Accept: "application/json",
+          },
+        },
+      },
+      {
+        url: `${Base_Url}/api/users`,
+        options: {
+          method: "GET",
+          headers: {
+            Authorization: "Bearer your_token_here",
+            Accept: "application/json",
+          },
+        },
+      },
+
+      // add more requests as needed
+    ];
 
     const fetchData = async () => {
       const results = await fetchMultipleRequests(requests);

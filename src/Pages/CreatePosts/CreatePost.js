@@ -22,7 +22,7 @@ const CreatePost = () => {
     handlePostSubmit,
     userProfile,
   } = useMyContext();
-  const { success, user } = userProfile || {};
+  const { user } = userProfile || {};
 
   const handleClick = (e) => {
     handlePostSubmit(e);
@@ -189,7 +189,7 @@ const CreatePost = () => {
               <div className="flex items-center gap-2 overflow-x-auto scrollbar-hide">
                 {MediaUrl &&
                   MediaUrl.map((media) => {
-                    const { id, name, type, dataUrl } = media;
+                    const { id, name, dataUrl } = media;
 
                     return (
                       <div key={id} className="relative w-fit ">
