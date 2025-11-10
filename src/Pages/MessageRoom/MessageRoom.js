@@ -28,7 +28,7 @@ const MessagePage = () => {
         bottomRef.current?.scrollIntoView({ behavior: "smooth" });
       }, 500);
     }
-  }, [data?._id, refreshChat, handleGetChat]);
+  }, [data?._id, refreshChat, ]);
 
   const handleRerunPostDisplay = () => {
     handleChat(data?.email, data?._id, ChatInput);
