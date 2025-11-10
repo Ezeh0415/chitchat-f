@@ -1152,6 +1152,8 @@ export function MyContextProvider({ children }) {
       return;
     }
 
+    if (!requestId) return;
+
     try {
       const response = await fetch(`${Base_Url}/api/getChatMessages`, {
         method: "POST",
