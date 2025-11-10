@@ -11,7 +11,6 @@ const MessagePage = () => {
     messages,
     handleGetChat,
     Chat,
-    refreshChat,
   } = useMyContext();
   const bottomRef = React.useRef(null);
   const chatUser = JSON.parse(localStorage.getItem("chatUser"));
@@ -20,15 +19,6 @@ const MessagePage = () => {
   const storedUser = localStorage.getItem("user");
   const users = JSON.parse(storedUser);
   const { email } = users || {};
-
-  React.useEffect(() => {
-    if (data?._id) {
-      handleGetChat(data._id);
-      setTimeout(() => {
-        bottomRef.current?.scrollIntoView({ behavior: "smooth" });
-      }, 500);
-    }
-  }, [data?._id, refreshChat, ]);
 
   const handleRerunPostDisplay = () => {
     handleChat(data?.email, data?._id, ChatInput);
