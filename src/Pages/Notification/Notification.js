@@ -9,7 +9,7 @@ import { useNavigate } from "react-router-dom";
 
 const NotificationPage = () => {
   const { userProfile, handlePostDisplay, handleClearNotif } = useMyContext();
-  const { mySuccess, user } = userProfile || {};
+  const { user } = userProfile || {};
 
   const { notifications, FriendRequestsNotifications } = user || {};
   const navigate = useNavigate();

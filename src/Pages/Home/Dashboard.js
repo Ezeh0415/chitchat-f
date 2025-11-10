@@ -24,9 +24,9 @@ const Dashboard = () => {
   const bottomRef = React.useRef(null);
   const [pageLoader, setPageLoader] = React.useState(false);
 
-  const { mySuccess, user } = userProfile || {};
-  const { totalCount, totalPages, currentPage, data } = posts || {};
-  const { FriendRequest, Friends } = user || {};
+  const { user } = userProfile || {};
+  const { data } = posts || {};
+  const { Friends } = user || {};
 
   // ...existing code...
 
@@ -51,7 +51,7 @@ const Dashboard = () => {
       container.removeEventListener("scroll", onScroll);
       setPageLoader(false);
     };
-  }, [bottomRef, data]);
+  }, [bottomRef, data, setLimit]);
   // ...existing code...
 
   return (

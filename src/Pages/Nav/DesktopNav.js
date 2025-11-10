@@ -4,7 +4,7 @@ import { useMyContext } from "../../Context/MyContext";
 
 const DesktopNav = () => {
   const { userProfile, handleLogout } = useMyContext();
-  const { mySuccess, user } = userProfile || {};
+  const {  user } = userProfile || {};
   const unreadCount = [
     ...(user?.notifications || []),
     ...(user?.FriendRequestsNotifications || []),

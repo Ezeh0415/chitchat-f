@@ -18,8 +18,8 @@ const Model = ({ email }) => {
 
   //   const [profileMedia, setMedia] = React.useState();
   const handleSubmitProfile = () => {
-    MediaUrl.map((media) => {
-      const { id, name, type, dataUrl } = media;
+    MediaUrl.forEach((media) => {
+      const { dataUrl } = media;
       handleProfileSubmit(email, dataUrl);
     });
   };
@@ -52,7 +52,7 @@ const Model = ({ email }) => {
                         <div className=" h-[68vh] overflow-x-auto">
                           {MediaUrl &&
                             MediaUrl.map((media) => {
-                              const { id, name, type, dataUrl } = media;
+                              const { id, name, dataUrl } = media;
 
                               return (
                                 <div key={id} className=" w-full ">

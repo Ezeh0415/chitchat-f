@@ -1,5 +1,5 @@
 import React from "react";
-import { NavLink } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import {
   CheckCircleIcon,
   ExclamationCircleIcon,
@@ -98,12 +98,12 @@ const Login = () => {
               >
                 Password
               </label>
-              <a
-                href="#"
+              <Link
+                to="/singup "
                 className="text-sm text-yellow-900 hover:text-yellow-700 dark:text-yellow-600 dark:hover:text-yellow-400"
               >
                 Forgot password?
-              </a>
+              </Link>
             </div>
             <div className="flex items-center border border-gray-300 dark:border-gray-600 rounded-lg overflow-hidden">
               <input

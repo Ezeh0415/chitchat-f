@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { useNavigate } from "react-router-dom";
 import { useMyContext } from "../../Context/MyContext";
 
@@ -8,7 +8,6 @@ const MessagePage = () => {
     handleChat,
     ChatInput,
     handleChatInput,
-    socket,
     messages,
     handleGetChat,
     Chat,
@@ -29,7 +28,7 @@ const MessagePage = () => {
         bottomRef.current?.scrollIntoView({ behavior: "smooth" });
       }, 500);
     }
-  }, [data?._id, refreshChat]);
+  }, [data?._id, refreshChat, handleGetChat]);
 
   const handleRerunPostDisplay = () => {
     handleChat(data?.email, data?._id, ChatInput);
