@@ -1,6 +1,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { useMyContext } from "../../Context/MyContext";
+import { Base_Url } from "../../Db/Dburl";
 
 const MessagePage = () => {
   const {
@@ -9,8 +10,12 @@ const MessagePage = () => {
     ChatInput,
     handleChatInput,
     messages,
-    handleGetChat,
     Chat,
+    setError,
+    setLoading,
+    setMessage,
+    setSuccess,
+    setChat,
   } = useMyContext();
   const bottomRef = React.useRef(null);
   const chatUser = JSON.parse(localStorage.getItem("chatUser"));
@@ -25,13 +30,133 @@ const MessagePage = () => {
     handleGetChat(data?._id);
   };
 
+  const handleGetChat = React.useCallback(
+    async (friendId) => {
+      setError(false);
+      setSuccess(false);
+      setLoading(true);
+      setMessage("");
+
+      if (!email || !friendId) {
+        setError(true);
+        setMessage("Empty input, please try again.");
+        setLoading(false);
+        return;
+      }
+
+      try {
+        const response = await fetch(`${Base_Url}/api/getChatMessages`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ userEmail: email, friendId }),
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(data?.message || "Failed to get chat");
+        }
+
+        setChat(data);
+        setSuccess(true);
+      } catch (error) {
+        setError(true);
+        setMessage(error.message || "Failed to get chat");
+      } finally {
+        setLoading(false);
+        setTimeout(() => {
+          setSuccess(false);
+          setError(false);
+          setMessage("");
+        }, 2000);
+      }
+    },
+    [email, setChat, setError, setLoading, setMessage, setSuccess]
+  );
+  // only email is needed as dependency
+
+  React.useEffect(() => {
+    if (data?._id) {
+      handleGetChat(data._id); // pass the correct ID
+    }
+  }, [data?._id, handleGetChat]); // messages triggers re-fetch after sending
+
+  // const handleGetChat = React.useCallback(async () => {
+  //   setError(false);
+  //   setSuccess(false);
+  //   setMessage("");
+
+  //   if (!email || !requestId) {
+  //     setError(true);
+  //     setMessage("empty input please try again.");
+  //     setLoading(false);
+  //     return;
+  //   }
+
+  //   if (!requestId) return;
+
+  //   try {
+  //     const response = await fetch(`${Base_Url}/api/getChatMessages`, {
+  //       method: "POST",
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //       },
+  //       body: JSON.stringify({
+  //         userEmail: email,
+  //         friendId: requestId,
+  //       }),
+  //     });
+
+  //     const data = await response.json();
+
+  //     if (!response.ok) {
+  //       throw new Error(data?.message || "Failed to send chat ");
+  //     }
+
+  //     setSuccess(true);
+  //     setMessage("chat sent ");
+  //     setChatInput("");
+  //     setLoading(false);
+  //     setChat(data);
+  //     setTimeout(() => {
+  //       setSuccess(false);
+
+  //       setChatInput("");
+  //       setMessage("");
+  //     }, 2000);
+  //   } catch (error) {
+  //     setChatInput("");
+  //     setError(true);
+  //     setMessage(error.message || "Failed to send chat");
+  //   } finally {
+  //     setMessage("");
+  //     setChatInput("");
+  //     setTimeout(() => {
+  //       setError(false);
+  //     }, 3000);
+  //   }
+  // }, [
+  //   email,
+  //   requestId,
+  //   setChat,
+  //   setChatInput,
+  //   setError,
+  //   setLoading,
+  //   setMessage,
+  //   setSuccess,
+  // ]); // empty array = function won't be recreated
+
+  // React.useEffect(() => {
+  //   handleGetChat(data?._id);
+  // }, [data?._id, handleGetChat, messages]); // Only re-create the function if dependencies change
+
   const navigate = useNavigate();
 
   const fullName = `${data?.firstName ?? ""} ${data?.lastName ?? ""}`.trim();
 
   React.useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages, bottomRef]);
+  }, [Chat, bottomRef]);
 
   return (
     <div className="flex flex-col h-[89vh] bg-yellow-50 md:h-[94vh] md:mt-[1rem]">
