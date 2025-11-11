@@ -1094,7 +1094,6 @@ export function MyContextProvider({ children }) {
 
     socket.on("chatMessage", (msg) => {
       setMessages(msg);
-      console.log(msg);
     });
 
     try {
@@ -1371,6 +1370,7 @@ export function MyContextProvider({ children }) {
         refreshChat,
         setChatInput,
         setChat,
+        setMessages,
       }}
     >
       {children}
