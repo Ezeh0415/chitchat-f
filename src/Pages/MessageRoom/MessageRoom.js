@@ -25,9 +25,7 @@ const MessagePage = () => {
   const users = JSON.parse(storedUser);
   const { email } = users || {};
 
-  const [messages, setMessages] = React.useState([]);
-
-  const { data: messageData } = messages;
+  
 
   const handleRerunPostDisplay = () => {
     handleChat(data?.email, data?._id, ChatInput);
@@ -48,10 +46,10 @@ const MessagePage = () => {
         return;
       }
 
-      socket.on("chatMessage", (msg) => {
-        console.log("Client connected:", socket.id);
-        setMessages(msg);
-      });
+      // socket.on("chatMessage", (msg) => {
+      //   console.log("Client connected:", socket.id);
+      //   setMessages(msg);
+      // });
 
       try {
         const response = await fetch(`${Base_Url}/api/getChatMessages`, {
@@ -87,8 +85,6 @@ const MessagePage = () => {
       setLoading,
       setMessage,
       setSuccess,
-      setMessages,
-      socket,
     ]
   );
   // only email is needed as dependency
@@ -175,7 +171,7 @@ const MessagePage = () => {
 
   React.useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [Chat, bottomRef, messages]);
+  }, [Chat, bottomRef]);
 
   return (
     <div className="flex flex-col h-[89vh] bg-yellow-50 md:h-[94vh] md:mt-[1rem]">
