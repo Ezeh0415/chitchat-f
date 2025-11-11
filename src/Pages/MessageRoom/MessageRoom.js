@@ -98,7 +98,7 @@ const MessagePage = () => {
       handleGetChat(data._id);
       socket.emit("joinRoom", data._id); // pass the correct ID
     }
-  }, [data?._id, handleGetChat, socket]); // messages triggers re-fetch after sending
+  }, [data?._id, handleGetChat, socket, Chat]); // messages triggers re-fetch after sending
 
   // const handleGetChat = React.useCallback(async () => {
   //   setError(false);
@@ -264,7 +264,7 @@ const MessagePage = () => {
                 );
               })}
 
-            {messageData && (
+            {/* {messageData && (
               <div
                 key={messageData?._id}
                 className={`flex flex-col mb-2 ${
@@ -297,7 +297,7 @@ const MessagePage = () => {
                   </span>
                 </div>
               </div>
-            )}
+            )} */}
 
             <div ref={bottomRef} />
           </div>
