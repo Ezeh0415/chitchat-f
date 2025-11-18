@@ -25,8 +25,6 @@ const MessagePage = () => {
   const users = JSON.parse(storedUser);
   const { email } = users || {};
 
-  
-
   const handleRerunPostDisplay = () => {
     handleChat(data?.email, data?._id, ChatInput);
     handleGetChat(data?._id);
@@ -78,14 +76,7 @@ const MessagePage = () => {
         }, 2000);
       }
     },
-    [
-      email,
-      setChat,
-      setError,
-      setLoading,
-      setMessage,
-      setSuccess,
-    ]
+    [email, setChat, setError, setLoading, setMessage, setSuccess]
   );
   // only email is needed as dependency
 
@@ -259,41 +250,6 @@ const MessagePage = () => {
                   </div>
                 );
               })}
-
-            {/* {messageData && (
-              <div
-                key={messageData?._id}
-                className={`flex flex-col mb-2 ${
-                  messageData?.from.trim().toLowerCase() ===
-                  email.trim().toLowerCase()
-                    ? "items-end"
-                    : "items-start"
-                }`}
-              >
-                <div
-                  className={`break-words px-3 py-2 rounded-lg max-w-[70%] ${
-                    messageData?.from.trim().toLowerCase() ===
-                    email.trim().toLowerCase()
-                      ? "bg-yellow-200 border border-yellow-600 text-gray-800"
-                      : "bg-white border border-gray-300 text-gray-800"
-                  }`}
-                >
-                  <span className="flex flex-col gap-1">
-                    {messageData?.message}
-                    <p className="break-words text-xs text-gray-500">
-                      {messageData?.timestamp &&
-                        new Date(messageData?.timestamp).toLocaleTimeString(
-                          [],
-                          {
-                            hour: "2-digit",
-                            minute: "2-digit",
-                          }
-                        )}
-                    </p>
-                  </span>
-                </div>
-              </div>
-            )} */}
 
             <div ref={bottomRef} />
           </div>

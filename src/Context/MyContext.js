@@ -45,6 +45,7 @@ export function MyContextProvider({ children }) {
   const [refreshChat, setRefreshChat] = React.useState(false);
   const [limit, setLimit] = React.useState(5);
   const [Token, setToken] = React.useState("");
+  const [followers, setFollowers] = React.useState(null);
   const storedUser = localStorage.getItem("user");
   const users = JSON.parse(storedUser);
   const { email } = users || {};
@@ -1196,6 +1197,105 @@ export function MyContextProvider({ children }) {
     }
   };
 
+  const handleFollow = async (followerEmail) => {
+    setError(false);
+    setSuccess(false);
+    setMessage("");
+
+    if (!email || !followerEmail) {
+      setError(true);
+      setMessage("empty input please try again.");
+      setLoading(false);
+      return;
+    }
+
+    try {
+      const response = await fetch(`${Base_Url}/api/follow`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          userEmail: email,
+          followerEmail: followerEmail,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data?.message || "Failed to send chat ");
+      }
+
+      setSuccess(true);
+      setMessage("followed");
+      setFollowers(data);
+      setLoading(false);
+      setTimeout(() => {
+        setSuccess(false);
+
+        setFollowers(data);
+        setMessage("");
+      }, 2000);
+    } catch (error) {
+      setError(true);
+      setMessage(error.message || "Failed to send chat");
+    } finally {
+      setMessage("");
+      setTimeout(() => {
+        setError(false);
+      }, 3000);
+    }
+  };
+  const handleUnFollow = async (followerEmail) => {
+    setError(false);
+    setSuccess(false);
+    setMessage("");
+
+    if (!email || !followerEmail) {
+      setError(true);
+      setMessage("empty input please try again.");
+      setLoading(false);
+      return;
+    }
+
+    try {
+      const response = await fetch(`${Base_Url}/api/unfollow`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          userEmail: email,
+          followerEmail: followerEmail,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data?.message || "Failed to send chat ");
+      }
+
+      setSuccess(true);
+      setMessage("followed");
+
+      setLoading(false);
+      setTimeout(() => {
+        setSuccess(false);
+        setMessage("");
+      }, 2000);
+    } catch (error) {
+      setError(true);
+      setMessage(error.message || "Failed to send chat");
+    } finally {
+      setMessage("");
+      setTimeout(() => {
+        setError(false);
+      }, 3000);
+    }
+  };
+
   // check if user is online
   React.useEffect(() => {
     const handleOnline = () => setIsOnline(true);
@@ -1371,6 +1471,12 @@ export function MyContextProvider({ children }) {
         setChatInput,
         setChat,
         setMessages,
+
+        // follower
+        followers,
+        handleFollow,
+        // unfollower
+        handleUnFollow,
       }}
     >
       {children}
