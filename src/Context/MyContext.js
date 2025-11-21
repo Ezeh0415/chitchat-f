@@ -45,7 +45,6 @@ export function MyContextProvider({ children }) {
   const [refreshChat, setRefreshChat] = React.useState(false);
   const [limit, setLimit] = React.useState(5);
   const [Token, setToken] = React.useState("");
-  const [followers, setFollowers] = React.useState(null);
   const storedUser = localStorage.getItem("user");
   const users = JSON.parse(storedUser);
   const { email } = users || {};
@@ -697,6 +696,8 @@ export function MyContextProvider({ children }) {
     localStorage.setItem("postDisplayNotif_id", notif_id);
     setError(false);
     setMessage("");
+    setLoading(false);
+    setLoading(true);
 
     if (!email || !postId) {
       setError(true);
@@ -738,6 +739,7 @@ export function MyContextProvider({ children }) {
       }, 3000);
     }
   };
+
   const handleClearNotif = async (notif_id) => {
     setLoading(true);
     setError(false);
@@ -1229,12 +1231,10 @@ export function MyContextProvider({ children }) {
 
       setSuccess(true);
       setMessage("followed");
-      setFollowers(data);
       setLoading(false);
       setTimeout(() => {
         setSuccess(false);
 
-        setFollowers(data);
         setMessage("");
       }, 2000);
     } catch (error) {
@@ -1473,7 +1473,6 @@ export function MyContextProvider({ children }) {
         setMessages,
 
         // follower
-        followers,
         handleFollow,
         // unfollower
         handleUnFollow,

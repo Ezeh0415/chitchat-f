@@ -17,6 +17,8 @@ const MessagePage = () => {
     setChat,
     socket,
   } = useMyContext();
+
+  const [ChatMessage, setChatMessage] = React.useState("");
   const bottomRef = React.useRef(null);
   const chatUser = JSON.parse(localStorage.getItem("chatUser"));
   const { data } = chatUser || {};
@@ -44,10 +46,10 @@ const MessagePage = () => {
         return;
       }
 
-      // socket.on("chatMessage", (msg) => {
-      //   console.log("Client connected:", socket.id);
-      //   setMessages(msg);
-      // });
+      socket.on("chatMessage", (msg) => {
+        console.log("Client connected:", socket.id);
+        setChatMessage(msg);
+      });
 
       try {
         const response = await fetch(`${Base_Url}/api/getChatMessages`, {
@@ -76,7 +78,16 @@ const MessagePage = () => {
         }, 2000);
       }
     },
-    [email, setChat, setError, setLoading, setMessage, setSuccess]
+    [
+      email,
+      setChat,
+      setError,
+      setLoading,
+      setMessage,
+      setSuccess,
+      socket,
+      setChatMessage,
+    ]
   );
   // only email is needed as dependency
 
@@ -162,7 +173,8 @@ const MessagePage = () => {
 
   React.useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [Chat, bottomRef]);
+  }, [ChatMessage, bottomRef]);
+
 
   return (
     <div className="flex flex-col h-[89vh] bg-yellow-50 md:h-[94vh] md:mt-[1rem]">

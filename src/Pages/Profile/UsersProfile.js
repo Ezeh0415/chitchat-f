@@ -12,7 +12,6 @@ const UserProfile = () => {
     handleUnFriend,
     handleChatRoom,
     handleFollow,
-    followers,
     handleUnFollow,
   } = useMyContext();
   const storedUser = localStorage.getItem("UsersProfile");
@@ -20,9 +19,6 @@ const UserProfile = () => {
 
   const { user } = users || {};
   const { user: myUser } = userProfile || {};
-
-  console.log("User Profile in ProfilePage:", myUser);
-  console.log(myUser?.following ? "true" : "false");
 
   const isFriends = Array.isArray(myUser?.Friends)
     ? myUser.Friends.find((friend) => friend.email === user.email)
