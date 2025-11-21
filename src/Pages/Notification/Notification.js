@@ -11,13 +11,12 @@ const NotificationPage = () => {
   const { userProfile, handlePostDisplay, handleClearNotif } = useMyContext();
   const { user } = userProfile || {};
 
-  const { notifications, FriendRequestsNotifications } = user || {};
+  const { notifications } = user || {};
   const navigate = useNavigate();
 
   // console.log(user);
 
-  const hasNotifications =
-    notifications?.length > 0 || FriendRequestsNotifications?.length > 0;
+  const hasNotifications = notifications?.length > 0;
 
   return (
     <section>
@@ -82,6 +81,7 @@ const NotificationPage = () => {
                                 ? "bg-gray-100 text-gray-500"
                                 : "bg-yellow-100 text-yellow-800"
                             }`}
+                            onClick={() => handleClearNotif(notif._id)}
                           >
                             {formatDistanceToNowStrict(
                               new Date(notif.createdAt),
@@ -111,79 +111,6 @@ const NotificationPage = () => {
                       )}
                     </li>
                   ))}
-              </ul>
-              {/* friend request notification */}
-              <ul className="space-y-4 mt-4">
-                {user &&
-                  [...(FriendRequestsNotifications || [])]
-                    .reverse()
-                    .map((notif) => (
-                      <li
-                        key={notif._id}
-                        className={`flex items-center gap-4 p-4 rounded-lg border transition-shadow ${
-                          notif.read
-                            ? "bg-white border-gray-200"
-                            : "bg-yellow-50 border-yellow-300 shadow-sm"
-                        } hover:shadow-md`}
-                        aria-live="polite"
-                        onClick={() => handleClearNotif(notif._id)}
-                      >
-                        {/* Profile image */}
-                        <img
-                          src={user?.profileImage}
-                          alt="User profile"
-                          className="w-10 h-10 rounded-full object-cover md:w-12 md:h-12"
-                        />
-
-                        {/* Notification content */}
-                        <div className="flex-1">
-                          <div className="flex justify-between items-center">
-                            <h4
-                              className={`text-sm font-medium md:text-lg ${
-                                notif.read ? "text-gray-800" : "text-yellow-800"
-                              }`}
-                            >
-                              {notif.firstName} {""} {notif.lastName}
-                            </h4>
-                          </div>
-
-                          <div>
-                            {/* Timestamp */}
-                            <span
-                              className={`text-xs px-2 py-0.5 mb-1 mt-1 rounded-full md:text-lg ${
-                                notif.read
-                                  ? "bg-gray-100 text-gray-500"
-                                  : "bg-yellow-100 text-yellow-800"
-                              }`}
-                            >
-                              {formatDistanceToNowStrict(
-                                new Date(notif.createdAt),
-                                {
-                                  addSuffix: true,
-                                }
-                              )}
-                            </span>
-
-                            {/* Optional subtitle or description */}
-                            {notif.userDid && (
-                              <p className="text-sm text-gray-600 mt-1 md:text-lg">
-                                {notif.firstName} : {notif.userDid}
-                              </p>
-                            )}
-                          </div>
-                        </div>
-
-                        {/* Unread indicator */}
-                        {!notif.read && (
-                          <div className="mt-1">
-                            <span
-                              className="inline-block w-3 h-3 bg-green-500 rounded-full md:w-4 md:h-4"
-                              title="Unread"
-                            />
-                          </div>
-                        )}
-                      </li>
-                    ))}
               </ul>
             </div>
           ) : (

@@ -150,15 +150,15 @@ const Dashboard = () => {
                   }
                 );
 
-                const posterEmail = posts.email;
-                const likerId = user.id;
-                const postId = posts._id;
+                const posterEmail = posts?.email;
+                const likerId = user?.id;
+                const postId = posts?._id;
                 const userHasLiked = posts.liked?.some(
-                  (like) => like.likedByEmail === user.email
+                  (like) => like?.likedByEmail === user?.email
                 );
                 const alreadyFriends =
                   Array.isArray(Friends) &&
-                  Friends.some((req) => req.email === posts.email);
+                  Friends.some((req) => req?.email === posts?.email);
 
                 return (
                   <main key={posts._id}>

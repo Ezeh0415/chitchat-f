@@ -7,17 +7,25 @@ import Success from "../../utilites/Success";
 import Error from "../../utilites/Error";
 
 const UserProfile = () => {
-  const { userProfile, handleUnFriend, handleChatRoom } = useMyContext();
+  const {
+    userProfile,
+    handleUnFriend,
+    handleChatRoom,
+    handleFollow,
+    handleUnFollow,
+  } = useMyContext();
   const storedUser = localStorage.getItem("UsersProfile");
   const users = JSON.parse(storedUser);
 
   const { user } = users || {};
   const { user: myUser } = userProfile || {};
 
-  // console.log("User Profile in ProfilePage:", user);
-
   const isFriends = Array.isArray(myUser?.Friends)
     ? myUser.Friends.find((friend) => friend.email === user.email)
+    : null;
+
+  const isFollowing = Array.isArray(myUser?.following)
+    ? myUser.following.find((follow) => follow.FollowerEmail === user.email)
     : null;
 
   const friendId = isFriends?._id; // or matchedFriend.id, depending on your schema
@@ -64,10 +72,21 @@ const UserProfile = () => {
 
               {/* Follow / Message Buttons */}
               <div className="mt-4 flex gap-3 justify-center md:justify-start">
-                <button className="bg-yellow-700 text-white px-4 py-2 rounded hover:bg-yellow-600 transition">
-                  {/* {isFollowing ? "Unfollow" : "Follow"} */}
-                  Follow
-                </button>
+                {isFollowing ? (
+                  <button
+                    onClick={() => handleUnFollow(user.email)}
+                    className="bg-yellow-700 text-white px-4 py-2 rounded hover:bg-yellow-600 transition"
+                  >
+                    unFollow
+                  </button>
+                ) : (
+                  <button
+                    onClick={() => handleFollow(user.email)}
+                    className="bg-yellow-700 text-white px-4 py-2 rounded hover:bg-yellow-600 transition"
+                  >
+                    follow
+                  </button>
+                )}
 
                 {isFriends ? (
                   <button

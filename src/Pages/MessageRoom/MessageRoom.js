@@ -17,6 +17,8 @@ const MessagePage = () => {
     setChat,
     socket,
   } = useMyContext();
+
+  const [ChatMessage, setChatMessage] = React.useState("");
   const bottomRef = React.useRef(null);
   const chatUser = JSON.parse(localStorage.getItem("chatUser"));
   const { data } = chatUser || {};
@@ -24,8 +26,6 @@ const MessagePage = () => {
   const storedUser = localStorage.getItem("user");
   const users = JSON.parse(storedUser);
   const { email } = users || {};
-
-  
 
   const handleRerunPostDisplay = () => {
     handleChat(data?.email, data?._id, ChatInput);
@@ -46,10 +46,10 @@ const MessagePage = () => {
         return;
       }
 
-      // socket.on("chatMessage", (msg) => {
-      //   console.log("Client connected:", socket.id);
-      //   setMessages(msg);
-      // });
+      socket.on("chatMessage", (msg) => {
+        console.log("Client connected:", socket.id);
+        setChatMessage(msg);
+      });
 
       try {
         const response = await fetch(`${Base_Url}/api/getChatMessages`, {
@@ -85,6 +85,8 @@ const MessagePage = () => {
       setLoading,
       setMessage,
       setSuccess,
+      socket,
+      setChatMessage,
     ]
   );
   // only email is needed as dependency
@@ -171,7 +173,8 @@ const MessagePage = () => {
 
   React.useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [Chat, bottomRef]);
+  }, [ChatMessage, bottomRef]);
+
 
   return (
     <div className="flex flex-col h-[89vh] bg-yellow-50 md:h-[94vh] md:mt-[1rem]">
@@ -259,41 +262,6 @@ const MessagePage = () => {
                   </div>
                 );
               })}
-
-            {/* {messageData && (
-              <div
-                key={messageData?._id}
-                className={`flex flex-col mb-2 ${
-                  messageData?.from.trim().toLowerCase() ===
-                  email.trim().toLowerCase()
-                    ? "items-end"
-                    : "items-start"
-                }`}
-              >
-                <div
-                  className={`break-words px-3 py-2 rounded-lg max-w-[70%] ${
-                    messageData?.from.trim().toLowerCase() ===
-                    email.trim().toLowerCase()
-                      ? "bg-yellow-200 border border-yellow-600 text-gray-800"
-                      : "bg-white border border-gray-300 text-gray-800"
-                  }`}
-                >
-                  <span className="flex flex-col gap-1">
-                    {messageData?.message}
-                    <p className="break-words text-xs text-gray-500">
-                      {messageData?.timestamp &&
-                        new Date(messageData?.timestamp).toLocaleTimeString(
-                          [],
-                          {
-                            hour: "2-digit",
-                            minute: "2-digit",
-                          }
-                        )}
-                    </p>
-                  </span>
-                </div>
-              </div>
-            )} */}
 
             <div ref={bottomRef} />
           </div>

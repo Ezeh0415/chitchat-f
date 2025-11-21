@@ -170,6 +170,19 @@ const ProfilePage = () => {
                   </p>
                   <p className="text-sm text-gray-500">Joined</p>
                 </div>
+
+                <div>
+                  <p className="text-xl font-semibold">
+                    {user?.followers?.length || 0}
+                  </p>
+                  <p className="text-sm text-gray-500">Followers</p>
+                </div>
+                <div>
+                  <p className="text-xl font-semibold">
+                    {user?.following?.length || 0}
+                  </p>
+                  <p className="text-sm text-gray-500">Following</p>
+                </div>
               </div>
             </div>
           )}
