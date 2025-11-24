@@ -696,8 +696,6 @@ export function MyContextProvider({ children }) {
     localStorage.setItem("postDisplayNotif_id", notif_id);
     setError(false);
     setMessage("");
-    setLoading(false);
-    setLoading(true);
 
     if (!email || !postId) {
       setError(true);
