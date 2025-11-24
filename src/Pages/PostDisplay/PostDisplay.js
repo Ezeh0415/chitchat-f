@@ -7,6 +7,7 @@ import { formatDistanceToNowStrict } from "date-fns";
 const PostDisplay = () => {
   const {
     loading,
+    setLoading,
     commentText,
     handleCommentChange,
     handleComment,
@@ -31,6 +32,8 @@ const PostDisplay = () => {
     timeZone: "UTC", // or use your local timezone if you want
   };
 
+  setLoading(true);
+
   const formattedDate = date
     .toLocaleString("en-US", options)
     .replace(",", " •");
@@ -51,6 +54,7 @@ const PostDisplay = () => {
       top: 0,
       behavior: "smooth",
     });
+    setLoading(false);
     handlePostDisplay(Email, post_id);
   }, [postDisplay, Email, post_id, handlePostDisplay]);
 

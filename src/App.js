@@ -1,4 +1,4 @@
-import { Link, Route, Routes } from "react-router-dom";
+import { Link, Route, Routes, useNavigate } from "react-router-dom";
 import "./App.css";
 import Signup from "./Pages/Authenteticator/Signup";
 import Login from "./Pages/Authenteticator/Login";
@@ -22,9 +22,18 @@ import PostDisplay from "./Pages/PostDisplay/PostDisplay";
 import DesktopNav from "./Pages/Nav/DesktopNav";
 import ProfileSetup from "./Pages/Authenteticator/ProfileSetup";
 import NotFound from "./Pages/404Page/404Page";
+import { useEffect } from "react";
 
 function App() {
-  const {  isAuthenticated, } = useMyContext();
+  const { isAuthenticated } = useMyContext();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!isAuthenticated) {
+      navigate("/signin");
+      console.log("second else", isAuthenticated);
+    }
+  }, [isAuthenticated, navigate]);
 
   return (
     <div className="bg-yellow-50/50 h-screen flex flex-col">
